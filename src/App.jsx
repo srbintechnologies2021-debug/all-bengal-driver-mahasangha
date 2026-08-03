@@ -1,33 +1,72 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Navbar from "./components/Navbar";
-
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Membership from "./pages/Membership";
-import Contact from "./pages/Contact";
-import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Review from "./pages/Review";
+import Payment from "./pages/Payment";
+import VerifyEmail from "./pages/VerifyEmail";
+import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
+
   return (
+
     <BrowserRouter>
-      <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/membership" element={<Membership />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="*" element={<NotFound />} />
+
+        <Route
+          path="/"
+          element={<Home />}
+        />
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
+        <Route
+          path="/review"
+          element={<Review />}
+        />
+
+        <Route
+          path="/verify-email"
+          element={<VerifyEmail />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/payment"
+          element={
+            <ProtectedRoute>
+              <Payment />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
+
   );
+
 }
 
 export default App;

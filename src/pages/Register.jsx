@@ -1,12 +1,32 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/firebase";
+import { useNavigate } from "react-router-dom";
+
+import { auth } from "../firebase/firebase";
+
+import {
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from "firebase/auth";
 
 function Register() {
-    const [fullName, setFullName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        district: "",
+        block: "",
+        address: "",
+        password: "",
+    });
+
+    const handleChange = (e) => {
+        setForm({
+            ...form,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     const registerUser = async (e) => {
         e.preventDefault();
@@ -14,69 +34,113 @@ function Register() {
         try {
             const userCredential = await createUserWithEmailAndPassword(
                 auth,
-                email,
-                password
+                form.email,
+                form.password
             );
 
-            const user = userCredential.user;
+            await sendEmailVerification(userCredential.user);
 
-            console.log("User UID:", user.uid);
+            alert("Registration Successful! Please verify your email.");
 
-            await setDoc(doc(db, "members", user.uid), {
-                fullName: fullName,
-                email: email,
-                status: "Pending",
-                membershipType: "General",
-                createdAt: new Date(),
+            navigate("/review", {
+                state: form,
             });
-
-            alert("Registration Successful!");
-
         } catch (error) {
-            console.error(error);
-            alert(error.message);
+            if (error.code === "auth/email-already-in-use") {
+                alert("এই Email দিয়ে আগে Registration করা হয়েছে। অন্য Email ব্যবহার করুন।");
+            } else if (error.code === "auth/weak-password") {
+                alert("Password কমপক্ষে 6 অক্ষরের হতে হবে।");
+            } else if (error.code === "auth/invalid-email") {
+                alert("সঠিক Email Address দিন।");
+            } else {
+                alert("Registration Error: " + error.message);
+            }
         }
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <div className="container mt-5">
+            <h2>🚗 ABDM Member Registration</h2>
 
-            <h1>🚗 ABDM Member Registration</h1>
+            <hr />
 
             <form onSubmit={registerUser}>
                 <input
                     type="text"
+                    name="name"
                     placeholder="Full Name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    className="form-control mb-3"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
                 />
-
-                <br /><br />
 
                 <input
                     type="email"
+                    name="email"
                     placeholder="Email Address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    className="form-control mb-3"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
                 />
 
-                <br /><br />
+                <input
+                    type="text"
+                    name="phone"
+                    placeholder="Phone Number"
+                    className="form-control mb-3"
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                />
+
+                <input
+                    type="text"
+                    name="district"
+                    placeholder="District"
+                    className="form-control mb-3"
+                    value={form.district}
+                    onChange={handleChange}
+                    required
+                />
+
+                <input
+                    type="text"
+                    name="block"
+                    placeholder="Block / Municipality"
+                    className="form-control mb-3"
+                    value={form.block}
+                    onChange={handleChange}
+                    required
+                />
+
+                <textarea
+                    name="address"
+                    placeholder="Full Address"
+                    className="form-control mb-3"
+                    value={form.address}
+                    onChange={handleChange}
+                    required
+                />
 
                 <input
                     type="password"
+                    name="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className="form-control mb-3"
+                    value={form.password}
+                    onChange={handleChange}
+                    required
                 />
 
-                <br /><br />
-
-                <button type="submit">
-                    Create Account
+                <button
+                    type="submit"
+                    className="btn btn-primary w-100"
+                >
+                    Register & Verify Email
                 </button>
-
             </form>
-
         </div>
     );
 }
