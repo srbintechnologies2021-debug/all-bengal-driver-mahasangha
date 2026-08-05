@@ -1,22 +1,50 @@
-import { Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Membership from "./pages/Membership";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import AdminLogin from "./pages/AdminLogin";
+import Membership from "./pages/Membership";
+
 
 function App() {
+
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
+        <BrowserRouter>
+
+            <Routes>
+
+                <Route path="/" element={<Home />} />
+
+                <Route
+                    path="/register"
+                    element={<Register />}
+                />
+
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
+
+                <Route
+                    path="/dashboard"
+                    element={<Dashboard />}
+                />
+
+                <Route
+                    path="/admin-login"
+                    element={<AdminLogin />}
+                />
+
+                <Route
+                    path="/membership"
+                    element={<Membership />}
+                />
+
+            </Routes>
+
+        </BrowserRouter>
     );
 }
 

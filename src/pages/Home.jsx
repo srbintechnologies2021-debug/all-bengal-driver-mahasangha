@@ -1,48 +1,28 @@
-import { Link } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+
+import Hero from "../components/home/Hero";
+import About from "../components/home/About";
+import Statistics from "../components/home/Statistics";
+import Leaders from "../components/home/Leaders";
+import NoticeBoard from "../components/home/NoticeBoard";
+import Gallery from "../components/home/Gallery";
+import Contact from "../components/home/Contact";
+
+import Footer from "../components/layout/Footer";
 
 function Home() {
     return (
-        <div
-            style={{
-                textAlign: "center",
-                padding: "50px",
-                fontFamily: "Arial, sans-serif",
-            }}
-        >
-            <h1>🚗 All Bengal Driver Mahasangha</h1>
-
-            <h2>Welcome to ABDM Membership Portal</h2>
-
-            <p>
-                Join our driver community and get your Digital Membership Card.
-            </p>
-
-            <div style={{ marginTop: "30px" }}>
-                <Link to="/register">
-                    <button
-                        style={{
-                            padding: "10px 20px",
-                            margin: "10px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        📝 Register Member
-                    </button>
-                </Link>
-
-                <Link to="/login">
-                    <button
-                        style={{
-                            padding: "10px 20px",
-                            margin: "10px",
-                            cursor: "pointer",
-                        }}
-                    >
-                        🔐 Member Login
-                    </button>
-                </Link>
-            </div>
-        </div>
+        <>
+            <Navbar />
+            <Hero />
+            <About />
+            <Statistics />
+            <Leaders />
+            <NoticeBoard />
+            <Gallery />
+            <Contact />
+            <Footer />
+        </>
     );
 }
 
