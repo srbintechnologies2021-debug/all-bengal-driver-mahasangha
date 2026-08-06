@@ -1,418 +1,251 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-import {
-    Link,
-    useNavigate
-} from "react-router-dom";
-
-
-import { auth, db } from "../firebase/firebaseConfig";
-
-
-import {
-    createUserWithEmailAndPassword,
-    sendEmailVerification
-} from "firebase/auth";
-
-
-import {
-    doc,
-    setDoc
-} from "firebase/firestore";
+import PersonalInfo from "../components/register/PersonalInfo";
+import ContactInfo from "../components/register/ContactInfo";
+import AddressInfo from "../components/register/AddressInfo";
+import DriverInfo from "../components/register/DriverInfo";
+import AccountInfo from "../components/register/AccountInfo";
+import RegisterProgress from "../components/register/RegisterProgress";
+import ReviewInfo from "../components/register/ReviewInfo";
+import PaymentInfo from "../components/register/PaymentInfo";
 
 function Register() {
+
     const navigate = useNavigate();
+
+    const [step, setStep] = useState(1);
 
     const [formData, setFormData] = useState({
 
         // Personal
-        fullName: "",
+
+        name: "",
         fatherName: "",
         dob: "",
         gender: "",
+        bloodGroup: "",
 
         // Contact
-        email: "",
+
         phone: "",
+        email: "",
         alternatePhone: "",
+        emergencyContact: "",
 
         // Address
+
+        address: "",
         district: "",
         block: "",
-        address: "",
-        pincode: "",
+        policeStation: "",
+        pinCode: "",
+        state: "West Bengal",
 
         // Driver
-        licenceNumber: "",
-        vehicleNumber: "",
-        aadhaarNumber: "",
-        bloodGroup: "",
+
+        licenceNo: "",
+        licenceExpiry: "",
+        vehicleType: "",
+        vehicleNo: "",
+        experience: "",
+        driverCategory: "",
+
+        // Account
+
+        password: "",
+        confirmPassword: "",
+        acceptTerms: false,
+        // Membership
+
+        membershipType: "Driver",
+        membershipStatus: "Pending",
+        paymentStatus: "Pending",
+        memberId: "",
+        registeredAt: null,
 
     });
 
 
+    const [message, setMessage] = useState("");
+
+
+
     const handleChange = (e) => {
+
+        const { name, value, type, checked } = e.target;
 
         setFormData({
 
             ...formData,
 
-            [e.target.name]: e.target.value
+            [name]: type === "checkbox" ? checked : value
 
         });
 
     };
-    const generateMembershipID = () => {
-        const handleSubmit = async (e) => {
-
-            e.preventDefault();
-
-
-            try {
-
-
-                const userCredential =
-                    await createUserWithEmailAndPassword(
-
-                        auth,
-
-                        formData.email,
-
-                        formData.phone
-
-                    );
-
-
-                const user = userCredential.user;
-
-
-                await sendEmailVerification(user);
-
-
-                const membershipID =
-                    generateMembershipID();
 
 
 
-                await setDoc(
 
-                    doc(
-                        db,
-                        "members",
-                        membershipID
-                    ),
 
-                    {
+    const handleRegister = async (e) => {
 
-                        membershipID,
+        if (e) e.preventDefault();
 
-                        uid: user.uid,
+        // Password Match Check
+        if (formData.password !== formData.confirmPassword) {
+            setMessage("❌ Password and Confirm Password do not match.");
+            return;
+        }
 
-                        ...formData,
+        // Terms Check
+        if (!formData.acceptTerms) {
+            setMessage("❌ Please accept the Terms & Conditions.");
+            return;
+        }
 
-                        membershipFee: 100,
 
-                        paymentStatus: "Pending",
+        try {
 
-                        status: "Active",
+            setMessage("Creating Membership...");
 
-                        createdAt: new Date()
-
-                    }
-
+            const userCredential =
+                await createUserWithEmailAndPassword(
+                    auth,
+                    formData.email,
+                    formData.password
                 );
 
+            const user = userCredential.user;
 
-                alert(
-                    "Registration Successful. Please verify your email."
-                );
+            await sendEmailVerification(user);
 
+            const memberId = `ABDM${Date.now()}`;
 
-                navigate("/dashboard");
+            await setDoc(
+                doc(db, "members", user.uid),
+                {
+                    ...formData,
 
+                    memberId,
 
-            }
+                    membershipType: "Driver",
+                    membershipStatus: "Pending",
+                    paymentStatus: "Pending",
 
-            catch (error) {
+                    registeredAt: serverTimestamp(),
+                    createdAt: serverTimestamp(),
 
-                alert(error.message);
-
-            }
-
-        };
-
-        const year = new Date().getFullYear();
-
-        const random =
-            Math.floor(
-                100000 + Math.random() * 900000
+                    uid: user.uid
+                }
             );
 
+            setMessage(
+                "✅ Registration Successful. Verification email has been sent."
+            );
 
-        return `ABDM${year}${random}`;
+            setTimeout(() => {
+                navigate("/login");
+            }, 3000);
+
+        } catch (error) {
+
+            console.error(error);
+
+            setMessage(error.message);
+
+        }
 
     };
-
-
     return (
 
-        <div className="register-container">
+        <div
+            style={{
+                maxWidth: "700px",
+                margin: "30px auto",
+                padding: "20px"
+            }}
+        >
 
+            <h2 className="mb-4">
+                🚗 ABDM Driver Membership Registration
+            </h2>
 
-            <h1>
-                🚗 ABDM Member Registration
-            </h1>
+            <RegisterProgress step={step} />
 
-
-            <form onSubmit={handleSubmit}>
-
-
-                {/* Personal Information */}
-
-                <h2>👤 Personal Information</h2>
-
-
-                <input
-                    type="text"
-                    name="fullName"
-                    placeholder="Full Name"
-                    value={formData.fullName}
-                    onChange={handleChange}
+            {step === 1 && (
+                <PersonalInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                    setStep={setStep}
                 />
+            )}
 
-
-                <input
-                    type="text"
-                    name="fatherName"
-                    placeholder="Father / Husband Name"
-                    value={formData.fatherName}
-                    onChange={handleChange}
+            {step === 2 && (
+                <ContactInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                    setStep={setStep}
                 />
+            )}
 
-
-                <label>Date of Birth</label>
-
-                <input
-                    type="date"
-                    name="dob"
-                    value={formData.dob}
-                    onChange={handleChange}
+            {step === 3 && (
+                <AddressInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                    setStep={setStep}
                 />
+            )}
 
-
-                <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                >
-
-                    <option value="">
-                        Select Gender
-                    </option>
-
-                    <option>
-                        Male
-                    </option>
-
-                    <option>
-                        Female
-                    </option>
-
-                    <option>
-                        Other
-                    </option>
-
-
-                </select>
-
-
-
-                {/* Contact */}
-
-                <h2>📞 Contact Information</h2>
-
-
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
+            {step === 4 && (
+                <DriverInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                    setStep={setStep}
                 />
+            )}
 
-
-                <input
-                    type="text"
-                    name="phone"
-                    placeholder="Phone Number"
-                    value={formData.phone}
-                    onChange={handleChange}
+            {step === 5 && (
+                <AccountInfo
+                    formData={formData}
+                    handleChange={handleChange}
+                    setStep={setStep}
                 />
+            )}
 
-
-                <input
-                    type="text"
-                    name="alternatePhone"
-                    placeholder="Alternate Phone"
-                    value={formData.alternatePhone}
-                    onChange={handleChange}
+            {step === 6 && (
+                <ReviewInfo
+                    formData={formData}
+                    setStep={setStep}
                 />
+            )}
 
-
-
-                {/* Address */}
-
-                <h2>📍 Address Information</h2>
-
-
-                <input
-                    type="text"
-                    name="district"
-                    placeholder="District"
-                    value={formData.district}
-                    onChange={handleChange}
+            {step === 7 && (
+                <PaymentInfo
+                    formData={formData}
+                    handleRegister={handleRegister}
+                    setStep={setStep}
                 />
-
-
-                <input
-                    type="text"
-                    name="block"
-                    placeholder="Block"
-                    value={formData.block}
-                    onChange={handleChange}
-                />
-
-
-                <textarea
-
-                    name="address"
-
-                    placeholder="Full Address"
-
-                    value={formData.address}
-
-                    onChange={handleChange}
-
-                />
-
-
-                <input
-                    type="text"
-                    name="pincode"
-                    placeholder="Pincode"
-                    value={formData.pincode}
-                    onChange={handleChange}
-                />
-
-
-
-                {/* Driver Information */}
-
-                <h2>🚗 Driver Information</h2>
-
-
-                <input
-                    type="text"
-                    name="licenceNumber"
-                    placeholder="Driving Licence Number"
-                    value={formData.licenceNumber}
-                    onChange={handleChange}
-
-
-
-
-
-                />
-
-
-                <input
-                    type="text"
-                    name="vehicleNumber"
-                    placeholder="Vehicle Number"
-                    value={formData.vehicleNumber}
-                    onChange={handleChange}
-                />
-
-
-                <input
-                    type="text"
-                    name="aadhaarNumber"
-                    placeholder="Aadhaar Number"
-                    value={formData.aadhaarNumber}
-                    onChange={handleChange}
-                />
-
-
-                <input
-                    type="text"
-                    name="bloodGroup"
-                    placeholder="Blood Group"
-                    value={formData.bloodGroup}
-                    onChange={handleChange}
-                />
-
-
-
-                {/* Membership */}
-
-                <h2>💳 Membership</h2>
-
-
-                <input
-
-                    type="text"
-
-                    value="Auto Generated"
-
-                    disabled
-
-                />
-
-
-                <input
-
-                    type="text"
-
-                    value="₹100"
-
-                    disabled
-
-                />
-
-
-                <input
-
-                    type="text"
-
-                    value="Pending"
-
-                    disabled
-
-                />
-
-
-
-                <button type="submit">
-
-                    📝 Register Member
-
-                </button>
-
-
-            </form>
-
-
-            <br />
-
-
-            <Link to="/">
-
-                Back Home
-
-            </Link>
-
+            )}
+
+            {message && (
+                <div className="alert alert-info mt-4">
+                    {message}
+                </div>
+            )}
 
         </div>
+
+    );
+
+
+    <p>
+        {message}
+    </p>
+
+
+        </div >
 
     );
 

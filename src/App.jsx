@@ -5,17 +5,22 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import Membership from "./pages/Membership";
-
+import MembershipPayment from "./pages/MembershipPayment";
 
 function App() {
 
     return (
+
         <BrowserRouter>
 
             <Routes>
 
-                <Route path="/" element={<Home />} />
+                <Route
+                    path="/"
+                    element={<Home />}
+                />
 
                 <Route
                     path="/register"
@@ -38,14 +43,26 @@ function App() {
                 />
 
                 <Route
+                    path="/admin"
+                    element={<AdminDashboard />}
+                />
+
+                <Route
                     path="/membership"
                     element={<Membership />}
+                />
+
+                <Route
+                    path="/membership-payment"
+                    element={<MembershipPayment />}
                 />
 
             </Routes>
 
         </BrowserRouter>
+
     );
+
 }
 
 export default App;

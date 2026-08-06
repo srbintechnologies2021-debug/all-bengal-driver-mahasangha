@@ -15,7 +15,7 @@ import { auth, db } from "../firebase/firebase";
 import DashboardCards from "../components/DashboardCards";
 import SearchBar from "../components/SearchBar";
 import MemberCard from "../components/MemberCard";
-
+import MemberModal from "../components/admin/MemberModal";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
@@ -29,7 +29,7 @@ function AdminDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
 
     const [error, setError] = useState("");
-
+    const [selectedMember, setSelectedMember] = useState(null);
     //--------------------------------------------------
 
     useEffect(() => {
@@ -53,9 +53,11 @@ function AdminDashboard() {
 
             (err) => {
 
-                console.log(err);
+                console.error("Firestore Error:", err);
 
-                setError("Unable to load members.");
+                alert(err.message);
+
+                setError(err.message);
 
                 setLoading(false);
 
@@ -260,6 +262,9 @@ function AdminDashboard() {
                             onReject={() =>
                                 updateMemberStatus(member.id, "Rejected")
                             }
+                            onView={() =>
+                                setSelectedMember(member)
+                            }
                         />
 
                     ))
@@ -267,6 +272,16 @@ function AdminDashboard() {
                 )}
 
             </div>
+            <MemberModal
+                member={selectedMember}
+                onClose={() => setSelectedMember(null)}
+                onApprove={(memberId) =>
+                    updateMemberStatus(memberId, "Approved")
+                }
+                onReject={(memberId) =>
+                    updateMemberStatus(memberId, "Rejected")
+                }
+            />
 
         </div>
 

@@ -2,7 +2,7 @@ import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 
 function Contact() {
     return (
-        <section className="py-5 bg-light">
+        <section id="contact" className="py-5 bg-light">
             <div className="container">
 
                 <div className="text-center mb-5">

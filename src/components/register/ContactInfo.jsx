@@ -1,31 +1,30 @@
-function ContactInfo({ formData, handleChange }) {
+function ContactInfo({
+
+    formData,
+    handleChange,
+    setStep
+
+}) {
+
     return (
-        <>
-            <h3 className="mb-4 text-primary">
-                📞 Contact Information
-            </h3>
 
-            <div className="row">
+        <div className="card shadow-sm border-0">
 
-                <div className="col-md-6 mb-3">
+            <div className="card-body">
+
+                <h4 className="mb-4">
+
+                    📞 Contact Information
+
+                </h4>
+
+
+                <div className="mb-3">
+
                     <label className="form-label">
-                        Email Address
-                    </label>
 
-                    <input
-                        type="email"
-                        className="form-control"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter Email"
-                        required
-                    />
-                </div>
+                        Mobile Number *
 
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Mobile Number
                     </label>
 
                     <input
@@ -35,14 +34,39 @@ function ContactInfo({ formData, handleChange }) {
                         value={formData.phone}
                         onChange={handleChange}
                         placeholder="Enter Mobile Number"
-                        maxLength="10"
                         required
                     />
+
                 </div>
 
-                <div className="col-md-6 mb-3">
+
+                <div className="mb-3">
+
                     <label className="form-label">
+
+                        Email Address *
+
+                    </label>
+
+                    <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Enter Email Address"
+                        required
+                    />
+
+                </div>
+
+
+                <div className="mb-3">
+
+                    <label className="form-label">
+
                         Alternate Mobile Number
+
                     </label>
 
                     <input
@@ -51,46 +75,63 @@ function ContactInfo({ formData, handleChange }) {
                         name="alternatePhone"
                         value={formData.alternatePhone}
                         onChange={handleChange}
-                        placeholder="Enter Alternate Mobile Number"
-                        maxLength="10"
+                        placeholder="Optional"
                     />
+
                 </div>
 
-                <div className="col-md-6 mb-3">
+
+                <div className="mb-4">
+
                     <label className="form-label">
-                        Password
+
+                        Emergency Contact Number
+
                     </label>
 
                     <input
-                        type="password"
+                        type="text"
                         className="form-control"
-                        name="password"
-                        value={formData.password}
+                        name="emergencyContact"
+                        value={formData.emergencyContact}
                         onChange={handleChange}
-                        placeholder="Create Password"
-                        required
+                        placeholder="Emergency Contact"
                     />
+
                 </div>
 
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Confirm Password
-                    </label>
 
-                    <input
-                        type="password"
-                        className="form-control"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        placeholder="Confirm Password"
-                        required
-                    />
+                <div className="d-flex justify-content-between">
+
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setStep(1)}
+                    >
+
+                        ← Back
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => setStep(3)}
+                    >
+
+                        Next →
+
+                    </button>
+
                 </div>
 
             </div>
-        </>
+
+        </div>
+
     );
+
 }
 
 export default ContactInfo;

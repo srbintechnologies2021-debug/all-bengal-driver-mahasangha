@@ -1,4 +1,9 @@
-function MemberCard({ member, onApprove, onReject }) {
+function MemberCard({
+    member,
+    onApprove,
+    onReject,
+    onView,
+}) {
 
     const statusColor = {
         Pending: "#ff9800",
@@ -8,47 +13,38 @@ function MemberCard({ member, onApprove, onReject }) {
 
     return (
 
-        <div
-            className="member-card"
-        >
+        <div className="member-card">
 
             <h2>
                 👤 {member.fullName || member.name || "Not Provided"}
             </h2>
 
             <p>
-                🆔 <b>Membership ID:</b>{" "}
-                {member.membershipId || "-"}
+                🆔 <b>Membership ID:</b> {member.membershipId || "-"}
             </p>
 
             <p>
-                📧 <b>Email:</b>{" "}
-                {member.email || "-"}
+                📧 <b>Email:</b> {member.email || "-"}
             </p>
 
             <p>
-                📱 <b>Phone:</b>{" "}
-                {member.phone || "-"}
+                📱 <b>Phone:</b> {member.phone || "-"}
             </p>
 
             <p>
-                🏛 <b>District:</b>{" "}
-                {member.district || "-"}
+                🏛 <b>District:</b> {member.district || "-"}
             </p>
 
             <p>
-                🏠 <b>Block:</b>{" "}
-                {member.block || "-"}
+                🏠 <b>Block:</b> {member.block || "-"}
             </p>
 
             <p>
-                💳 <b>Payment:</b>{" "}
-                {member.paymentStatus || "Pending"}
+                💳 <b>Payment:</b> {member.paymentStatus || "Pending"}
             </p>
 
             <p>
-                👥 <b>Membership:</b>{" "}
-                {member.membershipType || "General"}
+                👥 <b>Membership:</b> {member.membershipType || "General"}
             </p>
 
             <p>
@@ -63,6 +59,7 @@ function MemberCard({ member, onApprove, onReject }) {
                 >
                     {member.status || "Pending"}
                 </span>
+
             </p>
 
             <div className="card-buttons">
@@ -83,13 +80,9 @@ function MemberCard({ member, onApprove, onReject }) {
 
                 <button
                     className="view-btn"
-                    onClick={() =>
-                        alert(
-                            `Member: ${member.fullName || member.name}\nMembership ID: ${member.membershipId || "-"}`
-                        )
-                    }
+                    onClick={onView}
                 >
-                    👁 View
+                    👁 View Details
                 </button>
 
             </div>

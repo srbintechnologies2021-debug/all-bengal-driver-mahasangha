@@ -1,112 +1,99 @@
+import { Link } from "react-router-dom";
+import "../../styles/About.css";
+
 function About() {
     return (
-        <section className="py-5 bg-light">
-
+        <section className="about-section py-5">
             <div className="container">
 
-                <div className="text-center mb-5">
+                <div className="row align-items-center g-5">
 
-                    <h2 className="fw-bold text-primary">
-                        🚗 All Bengal Driver Mahasangha
-                    </h2>
-
-                    <h4 className="text-dark">
-                        পশ্চিমবঙ্গের সকল চালকদের ঐক্যবদ্ধ সংগঠন
-                    </h4>
-
-                    <hr className="w-25 mx-auto" />
-
-                </div>
-
-                <div className="row align-items-center">
-
-                    <div className="col-lg-6 mb-4">
+                    {/* Left Side */}
+                    <div className="col-lg-5 text-center">
 
                         <img
-                            src="/about.jpg"
-                            alt="ABDM"
-                            className="img-fluid rounded shadow-lg"
+                            src="/abdm-logo.png"
+                            alt="ABDM Logo"
+                            className="about-logo img-fluid"
                         />
 
                     </div>
 
-                    <div className="col-lg-6">
+                    {/* Right Side */}
+                    <div className="col-lg-7">
 
-                        <h3 className="text-success mb-3">
-                            🎯 আমাদের লক্ষ্য (Mission)
-                        </h3>
+                        <span className="about-subtitle">
+                            ABOUT ABDM
+                        </span>
 
-                        <p className="fs-5">
+                        <h2 className="about-title">
+                            All Bengal Driver Mahasangha
+                        </h2>
 
-                            অল বেঙ্গল ড্রাইভার মহাসংঘ পশ্চিমবঙ্গের সকল
-                            পেশাদার চালকদের অধিকার রক্ষা, কল্যাণ,
-                            প্রশিক্ষণ, সামাজিক নিরাপত্তা এবং ডিজিটাল
-                            সদস্যপদ প্রদানের জন্য কাজ করে।
-
-                        </p>
-
-                        <h3 className="text-danger mt-4">
-                            👁️ আমাদের ভিশন (Vision)
-                        </h3>
-
-                        <p className="fs-5">
-
-                            পশ্চিমবঙ্গের প্রতিটি চালককে একটি
-                            শক্তিশালী, নিরাপদ ও আধুনিক সংগঠনের
-                            আওতায় এনে তাদের জীবনযাত্রার মান
-                            উন্নয়ন করা।
-
+                        <p className="about-description">
+                            All Bengal Driver Mahasangha (ABDM) is a professional
+                            organization dedicated to the welfare, development,
+                            rights, and unity of drivers throughout West Bengal.
+                            Our mission is to empower drivers through digital
+                            membership, identity cards, legal support, welfare
+                            initiatives, and skill development programs.
                         </p>
 
                         <div className="row mt-4">
 
-                            <div className="col-md-6">
-
-                                <ul className="list-group">
-
-                                    <li className="list-group-item">
-                                        ✅ ডিজিটাল মেম্বারশিপ
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ Driver Welfare
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ Legal Support
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ Emergency Help
-                                    </li>
-
-                                </ul>
-
+                            <div className="col-md-4 mb-3">
+                                <div className="feature-card">
+                                    <div className="feature-icon">
+                                        🚗
+                                    </div>
+                                    <h5>Driver Welfare</h5>
+                                    <p>
+                                        Supporting every registered driver.
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="col-md-6">
-
-                                <ul className="list-group">
-
-                                    <li className="list-group-item">
-                                        ✅ Government Updates
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ Training Program
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ Insurance Awareness
-                                    </li>
-
-                                    <li className="list-group-item">
-                                        ✅ State Driver Network
-                                    </li>
-
-                                </ul>
-
+                            <div className="col-md-4 mb-3">
+                                <div className="feature-card">
+                                    <div className="feature-icon">
+                                        🪪
+                                    </div>
+                                    <h5>Digital ID</h5>
+                                    <p>
+                                        QR Verified Membership Identity.
+                                    </p>
+                                </div>
                             </div>
+
+                            <div className="col-md-4 mb-3">
+                                <div className="feature-card">
+                                    <div className="feature-icon">
+                                        🤝
+                                    </div>
+                                    <h5>Legal Support</h5>
+                                    <p>
+                                        Help and assistance for members.
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="mt-4">
+
+                            <Link
+                                to="/membership"
+                                className="btn btn-primary btn-lg me-3"
+                            >
+                                Join Membership
+                            </Link>
+
+                            <Link
+                                to="/contact"
+                                className="btn btn-outline-primary btn-lg"
+                            >
+                                Contact Us
+                            </Link>
 
                         </div>
 
@@ -115,7 +102,6 @@ function About() {
                 </div>
 
             </div>
-
         </section>
     );
 }

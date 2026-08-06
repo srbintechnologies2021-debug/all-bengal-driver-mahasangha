@@ -1,0 +1,86 @@
+.notice-section {
+
+    padding: 90px 0;
+    background: #f8f9fa;
+
+}
+
+.section-title {
+
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #0d6efd;
+
+}
+
+.section-subtitle {
+
+    color: #666;
+    max-width: 700px;
+    margin: auto;
+
+}
+
+.notice-card {
+
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    height: 100%;
+    position: relative;
+    transition: .3s;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, .08);
+
+}
+
+.notice-card:hover {
+
+    transform: translateY(-6px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, .15);
+
+}
+
+.notice-card h5 {
+
+    font-weight: 700;
+    margin-top: 15px;
+
+}
+
+.notice-card p {
+
+    color: #666;
+    line-height: 1.7;
+
+}
+
+.important-badge {
+
+    position: absolute;
+    top: 15px;
+    right: 15px;
+
+    background: #dc3545;
+
+    color: white;
+
+    padding: 5px 12px;
+
+    border-radius: 50px;
+
+    font-size: 12px;
+
+}
+
+.notice-footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-top: 20px;
+
+}

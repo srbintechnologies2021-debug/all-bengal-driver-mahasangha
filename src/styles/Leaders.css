@@ -1,0 +1,49 @@
+.leaders-section {
+    padding: 90px 0;
+    background: #f8f9fa;
+}
+
+.leaders-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.leaders-subtitle {
+    color: #6c757d;
+    margin-top: 10px;
+}
+
+.leader-card {
+    background: #fff;
+    border-radius: 18px;
+    overflow: hidden;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
+    transition: .3s;
+    height: 100%;
+}
+
+.leader-card:hover {
+    transform: translateY(-10px);
+}
+
+.leader-image {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.leader-card h4 {
+    margin-top: 20px;
+    font-weight: 700;
+}
+
+.leader-card h6 {
+    color: #0d6efd;
+}
+
+.leader-card p {
+    color: #666;
+    padding-bottom: 20px;
+}

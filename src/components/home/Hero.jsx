@@ -1,78 +1,119 @@
 import { Link } from "react-router-dom";
+import "../../styles/hero.css";
 
 function Hero() {
     return (
-        <section
-            className="d-flex align-items-center text-center text-white"
-            style={{
-                minHeight: "100vh",
-                backgroundImage:
-                    "linear-gradient(rgba(0,0,0,0.70), rgba(0,0,0,0.70)), url('/background.jpg')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-            }}
-        >
-            <div className="container">
+        <section id="home" className="hero-section">
 
-                <img
-                    src="/logo.png"
-                    alt="ABDM Logo"
-                    style={{
-                        width: "170px",
-                        height: "170px",
-                        borderRadius: "50%",
-                        background: "#fff",
-                        padding: "12px",
-                        boxShadow: "0 0 25px rgba(255,255,255,.5)"
-                    }}
-                />
+            <div className="hero-overlay">
 
-                <h1
-                    className="fw-bold mt-4"
-                    style={{
-                        fontSize: "55px"
-                    }}
-                >
-                    🚗 ALL BENGAL DRIVER MAHASANGHA
-                </h1>
+                <div className="container">
 
-                <h3 className="mt-3 text-warning">
-                    পশ্চিমবঙ্গের সকল চালকদের ঐক্যবদ্ধ সংগঠন
-                </h3>
+                    <div className="row align-items-center min-vh-100">
 
-                <p
-                    className="mt-4"
-                    style={{
-                        fontSize: "22px",
-                        maxWidth: "900px",
-                        margin: "auto",
-                    }}
-                >
-                    Driver Welfare | Digital Membership |
-                    Legal Support | Emergency Help |
-                    Organization News | Training | Insurance
-                </p>
+                        {/* Left Side */}
 
-                <div className="mt-5">
+                        <div
+                            className="col-lg-7 text-white"
+                            data-aos="fade-right"
+                        >
 
-                    <Link
-                        to="/register"
-                        className="btn btn-success btn-lg me-3 px-4"
-                    >
-                        📝 Register Member
-                    </Link>
+                            <span className="hero-badge">
+                                🚗 Official Website
+                            </span>
 
-                    <Link
-                        to="/login"
-                        className="btn btn-warning btn-lg px-4"
-                    >
-                        🔐 Member Login
-                    </Link>
+                            <h1 className="hero-title mt-3">
+                                ALL BENGAL DRIVER
+                                <br />
+                                MAHASANGHA
+                            </h1>
+
+                            <h4 className="hero-subtitle">
+                                পশ্চিমবঙ্গের সকল চালকদের ঐক্যবদ্ধ সংগঠন
+                            </h4>
+
+                            <p className="hero-description">
+                                Driver Welfare • Digital Membership • Legal Support •
+                                Emergency Help • Organization News • Driver Training •
+                                Insurance & Social Welfare
+                            </p>
+
+                            <div className="mt-4">
+
+                                <Link
+                                    to="/register"
+                                    className="btn btn-warning btn-lg me-3 mb-2"
+                                >
+                                    <i className="bi bi-person-plus-fill me-2"></i>
+                                    Join Membership
+                                </Link>
+
+                                <Link
+                                    to="/login"
+                                    className="btn btn-outline-light btn-lg mb-2"
+                                >
+                                    <i className="bi bi-box-arrow-in-right me-2"></i>
+                                    Member Login
+                                </Link>
+
+                            </div>
+
+                        </div>
+
+                        {/* Right Side */}
+
+                        <div
+                            className="col-lg-5 mt-5 mt-lg-0"
+                            data-aos="fade-left"
+                        >
+
+                            <div className="hero-card text-center">
+
+                                <img
+                                    src="/logo.png"
+                                    alt="ABDM Logo"
+                                    className="hero-logo"
+                                />
+
+                                <h3 className="mt-3">
+                                    All Bengal Driver Mahasangha
+                                </h3>
+
+                                <p className="text-muted">
+                                    Digital Membership Portal
+                                </p>
+
+                                <hr />
+
+                                <div className="row text-center">
+
+                                    <div className="col-4">
+                                        <h4 className="text-primary">23</h4>
+                                        <small>Districts</small>
+                                    </div>
+
+                                    <div className="col-4">
+                                        <h4 className="text-success">500+</h4>
+                                        <small>Members</small>
+                                    </div>
+
+                                    <div className="col-4">
+                                        <h4 className="text-warning">24×7</h4>
+                                        <small>Support</small>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
+
         </section>
     );
 }

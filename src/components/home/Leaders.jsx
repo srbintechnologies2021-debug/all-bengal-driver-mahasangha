@@ -1,90 +1,91 @@
+import "../../styles/Leaders.css";
+
 function Leaders() {
 
     const leaders = [
         {
-            name: "সভাপতির নাম",
-            post: "রাজ্য সভাপতি",
+            name: "President Name",
+            post: "President",
             phone: "+91 9876543210",
-            image: "/president.jpg",
+            image: "/leaders/president.jpg"
         },
         {
-            name: "সহ-সভাপতির নাম",
-            post: "রাজ্য সহ-সভাপতি",
+            name: "Working President",
+            post: "Working President",
             phone: "+91 9876543211",
-            image: "/vice-president.jpg",
+            image: "/leaders/working-president.jpg"
         },
         {
-            name: "সাধারণ সম্পাদকের নাম",
-            post: "রাজ্য সাধারণ সম্পাদক",
+            name: "Vice President",
+            post: "Vice President",
             phone: "+91 9876543212",
-            image: "/secretary.jpg",
+            image: "/leaders/vice-president.jpg"
         },
+        {
+            name: "General Secretary",
+            post: "General Secretary",
+            phone: "+91 9876543213",
+            image: "/leaders/general-secretary.jpg"
+        }
     ];
 
     return (
-        <section className="py-5 bg-light">
+
+        <section className="leaders-section">
 
             <div className="container">
 
                 <div className="text-center mb-5">
 
-                    <h2 className="fw-bold text-primary">
-                        👨‍💼 রাজ্য নেতৃত্ব
+                    <h2 className="leaders-title">
+                        Our Leadership
                     </h2>
 
-                    <p className="text-muted">
-                        অল বেঙ্গল ড্রাইভার মহাসংঘের রাজ্য নেতৃত্ব
+                    <p className="leaders-subtitle">
+                        All Bengal Driver Mahasangha Executive Committee
                     </p>
 
                 </div>
 
-                <div className="row">
+                <div className="row g-4">
 
-                    {leaders.map((leader, index) => (
+                    {
+                        leaders.map((leader, index) => (
 
-                        <div className="col-lg-4 col-md-6 mb-4" key={index}>
+                            <div
+                                className="col-lg-3 col-md-6"
+                                key={index}
+                            >
 
-                            <div className="card border-0 shadow-lg h-100 text-center">
+                                <div className="leader-card">
 
-                                <img
-                                    src={leader.image}
-                                    alt={leader.name}
-                                    className="card-img-top"
-                                    style={{
-                                        height: "350px",
-                                        objectFit: "cover",
-                                    }}
-                                />
+                                    <img
+                                        src={leader.image}
+                                        alt={leader.name}
+                                        className="leader-image"
+                                    />
 
-                                <div className="card-body">
+                                    <h4>{leader.name}</h4>
 
-                                    <h4 className="fw-bold">
-                                        {leader.name}
-                                    </h4>
+                                    <h6>{leader.post}</h6>
 
-                                    <h5 className="text-primary">
-                                        {leader.post}
-                                    </h5>
-
-                                    <hr />
-
-                                    <p className="mb-0">
-                                        📞 {leader.phone}
-                                    </p>
+                                    <p>{leader.phone}</p>
 
                                 </div>
 
                             </div>
 
-                        </div>
-
-                    ))}
+                        ))
+                    }
 
                 </div>
 
             </div>
+
         </section>
+
     );
+
 }
 
 export default Leaders;

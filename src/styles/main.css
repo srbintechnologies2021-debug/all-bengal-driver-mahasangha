@@ -1,12 +1,40 @@
+/* ==========================
+   ABDM Global Styles
+========================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
     background: #f5f7fb;
+    color: #333;
+    overflow-x: hidden;
 }
+
+/* Sections */
 
 section {
     padding: 80px 0;
 }
+
+/* Container */
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Section Title */
 
 .section-title {
     text-align: center;
@@ -14,26 +42,65 @@ section {
 }
 
 .section-title h2 {
-    font-weight: bold;
+    font-size: 38px;
+    font-weight: 700;
     color: #0d6efd;
+    margin-bottom: 15px;
 }
 
+.section-title p {
+    color: #666;
+    font-size: 17px;
+}
+
+/* Cards */
+
 .card {
-    transition: .3s;
+    border: none;
+    border-radius: 15px;
+    transition: .35s;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
 }
 
 .card:hover {
     transform: translateY(-10px);
 }
 
+/* Buttons */
+
 .hero-btn {
     margin: 10px;
 }
 
+/* Gallery */
+
 .gallery img {
+    width: 100%;
+    border-radius: 10px;
     transition: .4s;
 }
 
 .gallery img:hover {
     transform: scale(1.05);
+}
+
+/* Links */
+
+a {
+    text-decoration: none;
+}
+
+/* Lists */
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Images */
+
+img {
+    max-width: 100%;
+    display: block;
 }

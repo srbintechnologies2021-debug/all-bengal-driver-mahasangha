@@ -11,7 +11,7 @@ function Gallery() {
 
     return (
 
-        <section className="py-5 bg-light">
+        <section id="gallery" className="py-5 bg-light">
 
             <div className="container">
 

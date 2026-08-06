@@ -1,144 +1,166 @@
-function DriverInfo({ formData, handleChange }) {
+function DriverInfo({ formData, handleChange, setStep }) {
+
     return (
-        <>
-            <h3 className="mb-4 text-primary">
-                🚗 Driver Information
-            </h3>
 
-            <div className="row">
+        <div className="card shadow-sm border-0">
 
-                <div className="col-md-6 mb-3">
+            <div className="card-header bg-primary text-white">
+
+                <h4 className="mb-0">
+                    🚗 Driver Information
+                </h4>
+
+            </div>
+
+            <div className="card-body">
+
+                <div className="mb-3">
+
                     <label className="form-label">
-                        Driving Licence Number
+                        Driving Licence Number *
                     </label>
 
                     <input
                         type="text"
                         className="form-control"
-                        name="licenceNumber"
-                        value={formData.licenceNumber}
+                        name="licenceNo"
+                        value={formData.licenceNo}
                         onChange={handleChange}
                         placeholder="Enter Driving Licence Number"
                         required
                     />
+
                 </div>
 
-                <div className="col-md-6 mb-3">
+
+                <div className="row">
+
+                    <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Licence Expiry Date
+                        </label>
+
+                        <input
+                            type="date"
+                            className="form-control"
+                            name="licenceExpiry"
+                            value={formData.licenceExpiry}
+                            onChange={handleChange}
+                        />
+
+                    </div>
+
+
+                    <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Driver Category
+                        </label>
+
+                        <select
+                            className="form-select"
+                            name="driverCategory"
+                            value={formData.driverCategory}
+                            onChange={handleChange}
+                        >
+
+                            <option value="">Select Category</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Private">Private</option>
+                            <option value="Tourist">Tourist</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div className="row">
+
+                    <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Vehicle Type
+                        </label>
+
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="vehicleType"
+                            value={formData.vehicleType}
+                            onChange={handleChange}
+                            placeholder="Car / Taxi / Bus / Truck"
+                        />
+
+                    </div>
+
+
+                    <div className="col-md-6 mb-3">
+
+                        <label className="form-label">
+                            Vehicle Number
+                        </label>
+
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="vehicleNo"
+                            value={formData.vehicleNo}
+                            onChange={handleChange}
+                            placeholder="WB XX XX XXXX"
+                        />
+
+                    </div>
+
+                </div>
+
+
+                <div className="mb-4">
+
                     <label className="form-label">
-                        Licence Expiry Date
+                        Driving Experience (Years)
                     </label>
 
                     <input
-                        type="date"
+                        type="number"
                         className="form-control"
-                        name="licenceExpiry"
-                        value={formData.licenceExpiry}
+                        name="experience"
+                        value={formData.experience}
                         onChange={handleChange}
+                        placeholder="Years of Experience"
                     />
+
                 </div>
 
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Vehicle Type
-                    </label>
 
-                    <select
-                        className="form-select"
-                        name="vehicleType"
-                        value={formData.vehicleType}
-                        onChange={handleChange}
+                <div className="d-flex justify-content-between">
+
+                    <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => setStep(3)}
                     >
-                        <option value="">Select Vehicle Type</option>
-                        <option value="Car">Car</option>
-                        <option value="Taxi">Taxi</option>
-                        <option value="Auto">Auto</option>
-                        <option value="Bus">Bus</option>
-                        <option value="Truck">Truck</option>
-                        <option value="Bike">Bike</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
+                        ← Back
+                    </button>
 
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Vehicle Number
-                    </label>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => setStep(5)}
+                    >
+                        Next →
+                    </button>
 
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="vehicleNumber"
-                        value={formData.vehicleNumber}
-                        onChange={handleChange}
-                        placeholder="WB XX XX XXXX"
-                    />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Aadhaar Number
-                    </label>
-
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="aadhaarNumber"
-                        value={formData.aadhaarNumber}
-                        onChange={handleChange}
-                        placeholder="Enter Aadhaar Number"
-                        maxLength="12"
-                    />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Emergency Contact Name
-                    </label>
-
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="emergencyName"
-                        value={formData.emergencyName}
-                        onChange={handleChange}
-                        placeholder="Emergency Contact Name"
-                    />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Emergency Contact Number
-                    </label>
-
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="emergencyPhone"
-                        value={formData.emergencyPhone}
-                        onChange={handleChange}
-                        placeholder="Emergency Mobile Number"
-                        maxLength="10"
-                    />
-                </div>
-
-                <div className="col-md-6 mb-3">
-                    <label className="form-label">
-                        Relationship
-                    </label>
-
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="relationship"
-                        value={formData.relationship}
-                        onChange={handleChange}
-                        placeholder="Father / Mother / Wife / Brother"
-                    />
                 </div>
 
             </div>
-        </>
+
+        </div>
+
     );
+
 }
 
 export default DriverInfo;
