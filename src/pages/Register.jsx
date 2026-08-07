@@ -1,5 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth, db } from "../firebase/firebaseConfig";
+
+import {
+    createUserWithEmailAndPassword,
+    sendEmailVerification,
+} from "firebase/auth";
+
+import {
+    doc,
+    setDoc,
+    serverTimestamp,
+} from "firebase/firestore";
 
 import PersonalInfo from "../components/register/PersonalInfo";
 import ContactInfo from "../components/register/ContactInfo";
@@ -72,17 +84,14 @@ function Register() {
 
 
     const handleChange = (e) => {
-
         const { name, value, type, checked } = e.target;
 
-        setFormData({
+        console.log("Changing:", name, value);
 
-            ...formData,
-
-            [name]: type === "checkbox" ? checked : value
-
-        });
-
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
     };
 
 
@@ -158,6 +167,7 @@ function Register() {
         }
 
     };
+    console.log("FORM DATA:", formData);
     return (
 
         <div
@@ -240,14 +250,14 @@ function Register() {
     );
 
 
-    <p>
-        {message}
-    </p>
 
 
-        </div >
 
-    );
+
+
+
+
+
 
 }
 
