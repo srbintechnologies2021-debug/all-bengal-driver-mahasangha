@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import MemberIDCard from "../components/member/MemberIDCard";
 import { auth, db } from "../firebase/firebaseConfig";
 
 import {
@@ -12,7 +12,8 @@ import {
     doc,
     getDoc
 } from "firebase/firestore";
-
+import QRCodeCard from "../components/member/QRCodeCard";
+{/* <MemberIDCard member={member} /> */ }
 function Dashboard() {
 
     const navigate = useNavigate();
@@ -41,7 +42,14 @@ function Dashboard() {
                 }
 
                 if (docSnap.exists()) {
+
+                    console.log("Firestore Data:", docSnap.data());
                     setMember(docSnap.data());
+
+                } else {
+
+                    console.log("Member document not found.");
+
                 }
 
             } catch (error) {
@@ -145,6 +153,8 @@ function Dashboard() {
 
                     </table>
 
+                    <QRCodeCard member={member} />
+
                     <div className="mt-4">
 
                         <button
@@ -163,7 +173,6 @@ function Dashboard() {
         </div>
 
     );
-
 }
 
 export default Dashboard;
