@@ -33,6 +33,12 @@ function Dashboard() {
 
                 const docRef = doc(db, "members", user.uid);
                 const docSnap = await getDoc(docRef);
+                console.log("Current UID:", user.uid);
+                console.log("Document Exists:", docSnap.exists());
+
+                if (docSnap.exists()) {
+                    console.log("Firestore Data:", docSnap.data());
+                }
 
                 if (docSnap.exists()) {
                     setMember(docSnap.data());

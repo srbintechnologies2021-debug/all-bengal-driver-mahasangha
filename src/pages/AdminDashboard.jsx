@@ -10,7 +10,7 @@ import {
     updateDoc,
 } from "firebase/firestore";
 
-import { auth, db } from "../firebase/firebase";
+import { auth, db } from "../firebase/firebaseConfig";
 
 import DashboardCards from "../components/DashboardCards";
 import SearchBar from "../components/SearchBar";
@@ -78,15 +78,15 @@ function AdminDashboard() {
             total: members.length,
 
             approved: members.filter(
-                m => m.status === "Approved"
+                m => m.membershipStatus === "Approved"
             ).length,
 
             pending: members.filter(
-                m => m.status === "Pending"
+                m => m.membershipStatus === "Pending"
             ).length,
 
             rejected: members.filter(
-                m => m.status === "Rejected"
+                m => m.membershipStatus === "Rejected"
             ).length,
 
             paid: members.filter(
@@ -117,7 +117,7 @@ function AdminDashboard() {
 
                 member.block?.toLowerCase().includes(keyword) ||
 
-                member.membershipId?.toLowerCase().includes(keyword)
+                member.memberId?.toLowerCase().includes(keyword)
 
             );
 
@@ -129,9 +129,19 @@ function AdminDashboard() {
 
     const logout = async () => {
 
-        await signOut(auth);
+        try {
 
-        navigate("/admin-login");
+            await signOut(auth);
+
+            navigate("/admin-login");
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert("Logout Failed");
+
+        }
 
     };
     //--------------------------------------------------
@@ -142,7 +152,7 @@ function AdminDashboard() {
             await updateDoc(
                 doc(db, "members", memberId),
                 {
-                    status,
+                    membershipStatus: status,
                 }
             );
 
@@ -225,7 +235,7 @@ function AdminDashboard() {
 
                 rejected={statistics.rejected}
 
-                paid={statistics.paid}
+
 
             />
 

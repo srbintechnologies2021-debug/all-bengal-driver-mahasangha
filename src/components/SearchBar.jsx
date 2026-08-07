@@ -1,12 +1,14 @@
-function SearchBar({ search, setSearch }) {
+function SearchBar({ value, onChange }) {
 
     return (
+
         <div style={{ marginBottom: "25px" }}>
+
             <input
                 type="text"
-                placeholder="🔍 Search by name, email or phone..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                placeholder="🔍 Search by Name, Email, Phone or Member ID..."
+                value={value}
+                onChange={onChange}
                 style={{
                     width: "100%",
                     padding: "12px",
@@ -15,8 +17,11 @@ function SearchBar({ search, setSearch }) {
                     fontSize: "16px"
                 }}
             />
+
         </div>
+
     );
+
 }
 
 export default SearchBar;

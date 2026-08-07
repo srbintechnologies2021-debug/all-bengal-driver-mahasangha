@@ -16,6 +16,11 @@ function Login() {
 
         e.preventDefault();
 
+        if (!email || !password) {
+            setMessage("❌ Please enter Email and Password.");
+            return;
+        }
+
         try {
 
             await signInWithEmailAndPassword(
@@ -30,12 +35,24 @@ function Login() {
 
         } catch (error) {
 
-            setMessage(error.message);
+            switch (error.code) {
+
+                case "auth/invalid-credential":
+                    setMessage("❌ Invalid Email or Password.");
+                    break;
+
+                case "auth/invalid-email":
+                    setMessage("❌ Invalid Email Address.");
+                    break;
+
+                default:
+                    setMessage(error.message);
+
+            }
 
         }
 
     };
-
     return (
 
         <div className="container mt-5" style={{ maxWidth: "450px" }}>

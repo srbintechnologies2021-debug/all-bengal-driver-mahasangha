@@ -16,11 +16,11 @@ function MemberCard({
         <div className="member-card">
 
             <h2>
-                👤 {member.fullName || member.name || "Not Provided"}
+                👤 {member.name || "Not Provided"}
             </h2>
 
             <p>
-                🆔 <b>Membership ID:</b> {member.membershipId || "-"}
+                🆔 <b>Member ID:</b> {member.memberId || "-"}
             </p>
 
             <p>
@@ -40,11 +40,11 @@ function MemberCard({
             </p>
 
             <p>
-                💳 <b>Payment:</b> {member.paymentStatus || "Pending"}
+                🚗 <b>Membership:</b> {member.membershipType || "Driver"}
             </p>
 
             <p>
-                👥 <b>Membership:</b> {member.membershipType || "General"}
+                💳 <b>Payment:</b> {member.paymentStatus || "Pending"}
             </p>
 
             <p>
@@ -52,12 +52,12 @@ function MemberCard({
 
                 <span
                     style={{
-                        color: statusColor[member.status] || "#666",
+                        color: statusColor[member.membershipStatus] || "#666",
                         fontWeight: "bold",
                         marginLeft: "8px",
                     }}
                 >
-                    {member.status || "Pending"}
+                    {member.membershipStatus || "Pending"}
                 </span>
 
             </p>
