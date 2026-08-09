@@ -1,39 +1,34 @@
 import "../../styles/Leaders.css";
 
+import presidentPhoto from "../../assets/leadership/president.jpg";
+import vicePresidentPhoto from "../../assets/leadership/vice-president.jpg";
+
+
 function Leaders() {
 
     const leaders = [
         {
-            name: "President Name",
+            name: "Balaram Das Tudu",
             post: "President",
-            phone: "+91 9876543210",
-            image: "/leaders/president.jpg"
+            phone: "",
+            image: presidentPhoto
         },
         {
-            name: "Working President",
-            post: "Working President",
-            phone: "+91 9876543211",
-            image: "/leaders/working-president.jpg"
-        },
-        {
-            name: "Vice President",
-            post: "Vice President",
-            phone: "+91 9876543212",
-            image: "/leaders/vice-president.jpg"
-        },
-        {
-            name: "General Secretary",
-            post: "General Secretary",
-            phone: "+91 9876543213",
-            image: "/leaders/general-secretary.jpg"
+            name: "Ganesh Mahato",
+            post: "Vice-President",
+            phone: "",
+            image: vicePresidentPhoto
         }
     ];
+
 
     return (
 
         <section className="leaders-section">
 
             <div className="container">
+
+                {/* Heading */}
 
                 <div className="text-center mb-5">
 
@@ -47,36 +42,56 @@ function Leaders() {
 
                 </div>
 
-                <div className="row g-4">
 
-                    {
-                        leaders.map((leader, index) => (
+                {/* Leaders */}
 
-                            <div
-                                className="col-lg-3 col-md-6"
-                                key={index}
-                            >
+                <div className="row g-4 justify-content-center">
 
-                                <div className="leader-card">
+                    {leaders.map((leader, index) => (
 
-                                    <img
-                                        src={leader.image}
-                                        alt={leader.name}
-                                        className="leader-image"
-                                    />
+                        <div
+                            className="col-12 col-md-6 col-lg-5"
+                            key={index}
+                        >
 
-                                    <h4>{leader.name}</h4>
+                            <div className="leader-card">
 
-                                    <h6>{leader.post}</h6>
+                                {/* Real Photo */}
 
-                                    <p>{leader.phone}</p>
+                                <img
+                                    src={leader.image}
+                                    alt={leader.name}
+                                    className="leader-image"
+                                />
 
-                                </div>
+
+                                {/* Name */}
+
+                                <h4>
+                                    {leader.name}
+                                </h4>
+
+
+                                {/* Designation */}
+
+                                <h6>
+                                    {leader.post}
+                                </h6>
+
+
+                                {/* Phone */}
+
+                                {leader.phone && (
+                                    <p>
+                                        {leader.phone}
+                                    </p>
+                                )}
 
                             </div>
 
-                        ))
-                    }
+                        </div>
+
+                    ))}
 
                 </div>
 
@@ -85,7 +100,7 @@ function Leaders() {
         </section>
 
     );
-
 }
+
 
 export default Leaders;

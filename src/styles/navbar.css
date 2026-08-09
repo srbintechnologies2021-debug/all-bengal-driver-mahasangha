@@ -159,4 +159,65 @@
         width: 95%;
     }
 
+    /* ==========================================
+   ADMIN BUTTON
+========================================== */
+
+    .admin-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+
+        padding: 10px 18px;
+
+        background: #dc3545;
+        color: #ffffff !important;
+
+        border-radius: 8px;
+
+        text-decoration: none;
+
+        font-weight: 600;
+
+        transition: all 0.3s ease;
+    }
+
+
+    .admin-btn:hover {
+        background: #b02a37;
+        color: #ffffff !important;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 5px 15px rgba(220, 53, 69, 0.30);
+    }
+
+
+    .admin-btn svg {
+        font-size: 16px;
+    }
+
+
+    /* ==========================================
+   MOBILE
+========================================== */
+
+    @media (max-width: 991px) {
+
+        .admin-btn {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 18px;
+        }
+
+    }
+
+    /* Navbar Styles */
+
+    .navbar {
+        width: 100%;
+    }
+
 }

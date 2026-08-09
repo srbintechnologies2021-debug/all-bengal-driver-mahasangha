@@ -1,0 +1,138 @@
+/* Member Profile */
+
+.member-profile {
+    padding: 20px 0;
+}
+
+/* Page title */
+
+.member-profile-title {
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+/* Profile header */
+
+.member-profile-header {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.member-profile-header-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.member-profile-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0d6efd;
+}
+
+.member-profile-avatar-placeholder {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 42px;
+    border: 4px solid #0d6efd;
+}
+
+.member-profile-name {
+    margin: 0;
+    font-weight: 700;
+}
+
+.member-profile-id {
+    color: #6c757d;
+    margin: 5px 0;
+}
+
+/* Status */
+
+.member-status {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* Cards */
+
+.member-profile .card {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.member-profile .card-header {
+    padding: 14px 18px;
+}
+
+.member-profile .card-body {
+    padding: 0;
+}
+
+/* Tables */
+
+.member-profile table {
+    margin-bottom: 0;
+}
+
+.member-profile table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+
+.member-profile table td,
+.member-profile table th {
+    padding: 12px 15px;
+    vertical-align: middle;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .member-profile {
+        padding: 10px 0;
+    }
+
+    .member-profile-header {
+        padding: 20px 15px;
+    }
+
+    .member-profile-header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .member-profile-avatar,
+    .member-profile-avatar-placeholder {
+        width: 80px;
+        height: 80px;
+    }
+
+    .member-profile-name {
+        font-size: 21px;
+    }
+
+    .member-profile table th {
+        width: 40% !important;
+    }
+
+    .member-profile table td,
+    .member-profile table th {
+        padding: 10px;
+        font-size: 14px;
+    }
+}

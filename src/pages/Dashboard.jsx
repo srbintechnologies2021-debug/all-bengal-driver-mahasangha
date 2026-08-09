@@ -1,19 +1,23 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MemberIDCard from "../components/member/MemberIDCard";
+
 import { auth, db } from "../firebase/firebaseConfig";
 
 import {
     onAuthStateChanged,
-    signOut
+    signOut,
 } from "firebase/auth";
 
 import {
     doc,
-    getDoc
+    getDoc,
 } from "firebase/firestore";
+
 import QRCodeCard from "../components/member/QRCodeCard";
-{/* <MemberIDCard member={member} /> */ }
+import IDCard from "../components/idcard/IDCard";
+import MemberProfile from "../components/member/MemberProfile";
+
+
 function Dashboard() {
 
     const navigate = useNavigate();
@@ -21,58 +25,121 @@ function Dashboard() {
     const [member, setMember] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+    /* ================================
+       Load Current Member
+    ================================= */
+
     useEffect(() => {
 
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const unsubscribe =
+            onAuthStateChanged(
+                auth,
+                async (user) => {
 
-            if (!user) {
-                navigate("/login");
-                return;
-            }
+                    if (!user) {
 
-            try {
+                        navigate("/login");
 
-                const docRef = doc(db, "members", user.uid);
-                const docSnap = await getDoc(docRef);
-                console.log("Current UID:", user.uid);
-                console.log("Document Exists:", docSnap.exists());
+                        return;
 
-                if (docSnap.exists()) {
-                    console.log("Firestore Data:", docSnap.data());
+                    }
+
+
+                    try {
+
+                        const docRef =
+                            doc(
+                                db,
+                                "members",
+                                user.uid
+                            );
+
+                        const docSnap =
+                            await getDoc(docRef);
+
+
+                        console.log(
+                            "Current UID:",
+                            user.uid
+                        );
+
+                        console.log(
+                            "Document Exists:",
+                            docSnap.exists()
+                        );
+
+
+                        if (docSnap.exists()) {
+
+                            console.log(
+                                "Firestore Data:",
+                                docSnap.data()
+                            );
+
+                            setMember(
+                                docSnap.data()
+                            );
+
+                        } else {
+
+                            console.log(
+                                "Member document not found."
+                            );
+
+                            setMember(null);
+
+                        }
+
+                    } catch (error) {
+
+                        console.error(
+                            "Dashboard Error:",
+                            error
+                        );
+
+                    }
+
+
+                    setLoading(false);
+
                 }
+            );
 
-                if (docSnap.exists()) {
 
-                    console.log("Firestore Data:", docSnap.data());
-                    setMember(docSnap.data());
-
-                } else {
-
-                    console.log("Member document not found.");
-
-                }
-
-            } catch (error) {
-
-                console.error("Dashboard Error:", error);
-
-            }
-
-            setLoading(false);
-
-        });
-
-        return () => unsubscribe();
+        return () =>
+            unsubscribe();
 
     }, [navigate]);
 
+
+    /* ================================
+       Logout
+    ================================= */
+
     const handleLogout = async () => {
 
-        await signOut(auth);
+        try {
 
-        navigate("/login");
+            await signOut(auth);
+
+            navigate("/login");
+
+        } catch (error) {
+
+            console.error(
+                "Logout Error:",
+                error
+            );
+
+        }
 
     };
+
+
+    /* ================================
+       Loading
+    ================================= */
 
     if (loading) {
 
@@ -80,7 +147,14 @@ function Dashboard() {
 
             <div className="container mt-5 text-center">
 
-                <h4>Loading Dashboard...</h4>
+                <div
+                    className="spinner-border text-primary"
+                    role="status"
+                />
+
+                <h4 className="mt-3">
+                    Loading Dashboard...
+                </h4>
 
             </div>
 
@@ -88,80 +162,351 @@ function Dashboard() {
 
     }
 
+
+    /* ================================
+       Member Not Found
+    ================================= */
+
+    if (!member) {
+
+        return (
+
+            <div className="container py-5">
+
+                <div className="alert alert-warning text-center">
+
+                    <h4>
+                        Member Information Not Found
+                    </h4>
+
+                    <p>
+                        Your account is logged in,
+                        but membership information
+                        could not be found.
+                    </p>
+
+                    <button
+                        className="btn btn-primary"
+                        onClick={handleLogout}
+                    >
+                        Back to Login
+                    </button>
+
+                </div>
+
+            </div>
+
+        );
+
+    }
+
+
+    /* ================================
+       Status
+    ================================= */
+
+    const membershipStatus =
+        member.membershipStatus ||
+        "Pending";
+
+
+    const getStatusClass = () => {
+
+        if (
+            membershipStatus ===
+            "Approved"
+        ) {
+            return "bg-success";
+        }
+
+        if (
+            membershipStatus ===
+            "Rejected"
+        ) {
+            return "bg-danger";
+        }
+
+        return "bg-warning text-dark";
+
+    };
+
+
     return (
 
         <div className="container py-5">
 
             <div className="card shadow border-0">
 
+
+                {/* ======================
+                    Header
+                ======================= */}
+
                 <div className="card-header bg-primary text-white">
 
-                    <h3 className="mb-0">
-                        🚗 ABDM Member Dashboard
-                    </h3>
+                    <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+                        <h3 className="mb-0">
+                            🚗 ABDM Member Dashboard
+                        </h3>
+
+                        <span className="badge bg-light text-primary">
+                            Member Portal
+                        </span>
+
+                    </div>
 
                 </div>
 
+
                 <div className="card-body">
 
-                    <h4 className="text-success">
-                        Welcome, {member?.name || "Member"}
-                    </h4>
+
+                    {/* ======================
+                        Welcome
+                    ======================= */}
+
+                    <div className="mb-4">
+
+                        <h4 className="text-success">
+                            Welcome,{" "}
+                            {member.name ||
+                                "Member"}
+                        </h4>
+
+                        <p className="text-muted mb-0">
+                            All Bengal Driver Mahasangha
+                        </p>
+
+                    </div>
+
+
+                    {/* ======================
+                        Member ID Highlight
+                    ======================= */}
+
+                    <div className="alert alert-primary d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                        <div>
+
+                            <small className="text-muted d-block">
+                                YOUR MEMBERSHIP ID
+                            </small>
+
+                            <strong className="fs-4">
+                                {member.memberId ||
+                                    "Not Assigned"}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span
+                                className={`badge ${getStatusClass()} fs-6`}
+                            >
+                                {membershipStatus ===
+                                    "Approved"
+                                    ? "✅ Approved"
+                                    : membershipStatus ===
+                                        "Rejected"
+                                        ? "❌ Rejected"
+                                        : "⏳ Pending"}
+                            </span>
+
+                        </div>
+
+                    </div>
+
 
                     <hr />
 
-                    <table className="table table-bordered">
 
-                        <tbody>
+                    {/* ======================
+                        Member Information
+                    ======================= */}
 
-                            <tr>
-                                <th width="220">Member ID</th>
-                                <td>{member?.memberId || "-"}</td>
-                            </tr>
+                    <h5 className="text-primary mb-3">
+                        👤 Membership Information
+                    </h5>
 
-                            <tr>
-                                <th>Full Name</th>
-                                <td>{member?.name || "-"}</td>
-                            </tr>
 
-                            <tr>
-                                <th>Email</th>
-                                <td>{member?.email || "-"}</td>
-                            </tr>
+                    <div className="table-responsive">
 
-                            <tr>
-                                <th>Phone</th>
-                                <td>{member?.phone || "-"}</td>
-                            </tr>
+                        <table className="table table-bordered">
 
-                            <tr>
-                                <th>Membership Type</th>
-                                <td>{member?.membershipType || "-"}</td>
-                            </tr>
+                            <tbody>
 
-                            <tr>
-                                <th>Membership Status</th>
-                                <td>{member?.membershipStatus || "-"}</td>
-                            </tr>
+                                <tr>
 
-                            <tr>
-                                <th>Payment Status</th>
-                                <td>{member?.paymentStatus || "-"}</td>
-                            </tr>
+                                    <th width="220">
+                                        Member ID
+                                    </th>
 
-                        </tbody>
+                                    <td>
+                                        <strong>
+                                            {member.memberId ||
+                                                "-"}
+                                        </strong>
+                                    </td>
 
-                    </table>
+                                </tr>
 
-                    <QRCodeCard member={member} />
 
-                    <div className="mt-4">
+                                <tr>
+
+                                    <th>
+                                        Full Name
+                                    </th>
+
+                                    <td>
+                                        {member.name ||
+                                            "-"}
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>
+                                        Email
+                                    </th>
+
+                                    <td>
+                                        {member.email ||
+                                            "-"}
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>
+                                        Phone
+                                    </th>
+
+                                    <td>
+                                        {member.phone ||
+                                            "-"}
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>
+                                        Membership Type
+                                    </th>
+
+                                    <td>
+                                        {member.membershipType ||
+                                            "Driver"}
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>
+                                        Membership Status
+                                    </th>
+
+                                    <td>
+
+                                        <span
+                                            className={`badge ${getStatusClass()}`}
+                                        >
+                                            {membershipStatus}
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+
+                                <tr>
+
+                                    <th>
+                                        Payment Status
+                                    </th>
+
+                                    <td>
+                                        {member.paymentStatus ||
+                                            "-"}
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                    {/* ======================
+                        QR Code
+                    ======================= */}
+
+                    <hr className="my-5" />
+
+                    <h4 className="text-primary mb-4">
+                        📱 My Membership QR Code
+                    </h4>
+
+                    <QRCodeCard
+                        member={member}
+                    />
+                    <MemberProfile member={member} />
+
+
+                    {/* ======================
+                        Digital ID Card
+                    ======================= */}
+
+                    <hr className="my-5" />
+
+                    <h4 className="text-primary mb-4">
+                        🪪 My Digital ID Card
+                    </h4>
+
+
+                    {member.membershipStatus ===
+                        "Approved" ? (
+
+                        <IDCard
+                            member={member}
+                        />
+
+                    ) : (
+
+                        <div className="alert alert-info">
+
+                            🕐 Your Digital ID Card will
+                            become available after your
+                            membership is approved.
+
+                        </div>
+
+                    )}
+
+
+                    {/* ======================
+                        Logout
+                    ======================= */}
+
+                    <div className="mt-5">
 
                         <button
                             className="btn btn-danger"
                             onClick={handleLogout}
                         >
-                            Logout
+                            🚪 Logout
                         </button>
 
                     </div>
@@ -173,6 +518,7 @@ function Dashboard() {
         </div>
 
     );
+
 }
 
 export default Dashboard;

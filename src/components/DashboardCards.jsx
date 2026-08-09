@@ -16,6 +16,7 @@ function DashboardCards({
     };
 
     return (
+
         <div
             style={{
                 display: "flex",
@@ -24,6 +25,7 @@ function DashboardCards({
                 marginBottom: "30px"
             }}
         >
+
             <div style={cardStyle}>
                 <h3>👥 Total Members</h3>
                 <h1>{total}</h1>
@@ -43,7 +45,9 @@ function DashboardCards({
                 <h3>❌ Rejected</h3>
                 <h1>{rejected}</h1>
             </div>
+
         </div>
+
     );
 }
 

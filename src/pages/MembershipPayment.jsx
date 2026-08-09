@@ -1,16 +1,37 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function MembershipPayment() {
 
     const navigate = useNavigate();
 
-    const membershipFee = 500;
+    const membershipFee = 100;
 
-    const handlePayment = () => {
+    const [loading, setLoading] = useState(false);
 
-        alert("Razorpay Integration Coming Next Step");
+    const handlePayment = async () => {
 
-        // পরে এখানে Razorpay Payment হবে
+        try {
+
+            setLoading(true);
+
+            // Razorpay integration will be connected here
+            // after Firebase Cloud Function deployment.
+
+            alert("Razorpay payment setup is ready for the next step.");
+
+        } catch (error) {
+
+            console.error("Payment Error:", error);
+
+            alert("Unable to start payment.");
+
+        } finally {
+
+            setLoading(false);
+
+        }
+
     };
 
     return (
@@ -19,66 +40,87 @@ function MembershipPayment() {
             style={{
                 maxWidth: "700px",
                 margin: "40px auto",
-                padding: "30px",
-                background: "#fff",
-                borderRadius: "10px",
-                boxShadow: "0 0 10px rgba(0,0,0,0.15)"
+                padding: "30px"
             }}
         >
 
-            <h2 style={{ color: "#0d6efd" }}>
-                🚗 Membership Fee Payment
-            </h2>
+            <div className="card shadow border-0">
 
-            <hr />
+                <div className="card-header bg-success text-white">
 
-            <h3>
-                All Bengal Driver Mahasangha
-            </h3>
+                    <h3 className="mb-0">
+                        💳 Membership Payment
+                    </h3>
 
-            <p>
-                Membership Fee:
-            </p>
+                </div>
 
-            <h1 style={{ color: "green" }}>
-                ₹ {membershipFee}
-            </h1>
+                <div className="card-body">
 
-            <p>
-                এই Payment সফল হলে আপনার Membership Request
-                Admin Review-এর জন্য যাবে।
-            </p>
+                    <div className="text-center mb-4">
 
-            <button
-                onClick={handlePayment}
-                style={{
-                    padding: "12px 30px",
-                    background: "#198754",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    fontSize: "18px"
-                }}
-            >
-                💳 Pay Now
-            </button>
+                        <h5>
+                            All Bengal Driver Mahasangha
+                        </h5>
 
-            <br /><br />
+                        <p className="text-muted">
+                            Membership Registration Fee
+                        </p>
 
-            <button
-                onClick={() => navigate("/")}
-                style={{
-                    padding: "10px 25px"
-                }}
-            >
-                Back Home
-            </button>
+                    </div>
+
+                    <div
+                        className="alert alert-info text-center"
+                    >
+
+                        <strong>
+                            Membership Fee
+                        </strong>
+
+                        <div
+                            style={{
+                                fontSize: "32px",
+                                fontWeight: "bold"
+                            }}
+                        >
+                            ₹{membershipFee}
+                        </div>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        className="btn btn-success btn-lg w-100"
+                        onClick={handlePayment}
+                        disabled={loading}
+                    >
+
+                        {loading
+                            ? "Processing..."
+                            : "💳 Pay ₹100"
+                        }
+
+                    </button>
+
+                    <button
+                        type="button"
+                        className="btn btn-outline-secondary w-100 mt-3"
+                        onClick={() => navigate(-1)}
+                        disabled={loading}
+                    >
+                        ← Go Back
+                    </button>
+
+                    <p className="text-muted text-center mt-4 mb-0">
+                        🔒 Secure payment powered by Razorpay
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
 
     );
-
 }
 
 export default MembershipPayment;

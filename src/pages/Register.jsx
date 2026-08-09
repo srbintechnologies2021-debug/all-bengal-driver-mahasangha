@@ -73,8 +73,8 @@ function Register() {
         membershipType: "Driver",
         membershipStatus: "Pending",
         paymentStatus: "Pending",
-        memberId: "",
-        registeredAt: null,
+
+
 
     });
 
@@ -108,6 +108,10 @@ function Register() {
             return;
         }
 
+
+
+
+
         // Terms Check
         if (!formData.acceptTerms) {
             setMessage("❌ Please accept the Terms & Conditions.");
@@ -132,26 +136,58 @@ function Register() {
 
             const memberId = `ABDM${Date.now()}`;
 
+            const memberData = {
+
+                // Personal
+                name: formData.name,
+                fatherName: formData.fatherName,
+                dob: formData.dob,
+                gender: formData.gender,
+                bloodGroup: formData.bloodGroup,
+
+                // Contact
+                phone: formData.phone,
+                email: formData.email,
+                alternatePhone: formData.alternatePhone,
+                emergencyContact: formData.emergencyContact,
+
+                // Address
+                address: formData.address,
+                district: formData.district,
+                block: formData.block,
+                policeStation: formData.policeStation,
+                pinCode: formData.pinCode,
+                state: formData.state,
+
+                // Driver
+                licenceNo: formData.licenceNo,
+                licenceExpiry: formData.licenceExpiry,
+                vehicleType: formData.vehicleType,
+                vehicleNo: formData.vehicleNo,
+                experience: formData.experience,
+                driverCategory: formData.driverCategory,
+
+                // Membership
+                acceptTerms: formData.acceptTerms,
+                memberId: memberId,
+                membershipType: "Driver",
+                membershipStatus: "Pending",
+                paymentStatus: "Pending",
+
+                // System
+                uid: user.uid,
+                registeredAt: serverTimestamp(),
+                createdAt: serverTimestamp()
+
+            };
+
             await setDoc(
                 doc(db, "members", user.uid),
-                {
-                    ...formData,
-
-                    memberId,
-
-                    membershipType: "Driver",
-                    membershipStatus: "Pending",
-                    paymentStatus: "Pending",
-
-                    registeredAt: serverTimestamp(),
-                    createdAt: serverTimestamp(),
-
-                    uid: user.uid
-                }
+                memberData
             );
 
             setMessage(
-                "✅ Registration Successful. Verification email has been sent."
+                "✅ Registration successful! Please verify your email before logging in."
             );
 
             setTimeout(() => {

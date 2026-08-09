@@ -1,49 +1,206 @@
+/* ==========================================
+   LEADERSHIP SECTION
+========================================== */
+
 .leaders-section {
-    padding: 90px 0;
+    padding: 80px 0;
     background: #f8f9fa;
 }
 
+
+/* ==========================================
+   TITLE
+========================================== */
+
 .leaders-title {
-    font-size: 2.5rem;
+    font-size: 42px;
     font-weight: 700;
-    color: #0d6efd;
+    color: #0d8bd6;
+    margin-bottom: 10px;
 }
 
 .leaders-subtitle {
+    font-size: 17px;
     color: #6c757d;
-    margin-top: 10px;
+    margin-bottom: 0;
 }
 
+
+/* ==========================================
+   LEADER CARD
+========================================== */
+
 .leader-card {
-    background: #fff;
+    background: #ffffff;
     border-radius: 18px;
     overflow: hidden;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, .1);
-    transition: .3s;
-    height: 100%;
+    padding-bottom: 25px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
+
+
+/* Hover */
 
 .leader-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 14px 35px rgba(0, 0, 0, 0.16);
 }
+
+
+/* ==========================================
+   LEADER IMAGE
+========================================== */
 
 .leader-image {
+    display: block;
+
     width: 100%;
-    height: 280px;
-    object-fit: cover;
+
+    /*
+       IMPORTANT:
+       Do NOT use fixed height.
+       This prevents the real photo
+       from being cropped.
+    */
+
+    height: auto;
+
+    max-height: 520px;
+
+    object-fit: contain;
+
+    object-position: center;
+
+    background: #ffffff;
+
+    margin: 0 auto;
 }
+
+
+/* ==========================================
+   NAME
+========================================== */
 
 .leader-card h4 {
-    margin-top: 20px;
+    margin-top: 22px;
+    margin-bottom: 8px;
+
+    font-size: 25px;
     font-weight: 700;
+
+    color: #263238;
 }
+
+
+/* ==========================================
+   DESIGNATION
+========================================== */
 
 .leader-card h6 {
-    color: #0d6efd;
+    margin-bottom: 0;
+
+    font-size: 17px;
+    font-weight: 600;
+
+    color: #0d8bd6;
 }
 
+
+/* ==========================================
+   PHONE
+========================================== */
+
 .leader-card p {
-    color: #666;
-    padding-bottom: 20px;
+    margin-top: 8px;
+    margin-bottom: 0;
+
+    font-size: 15px;
+    color: #6c757d;
+}
+
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 991px) {
+
+    .leaders-section {
+        padding: 65px 0;
+    }
+
+    .leaders-title {
+        font-size: 36px;
+    }
+
+    .leader-image {
+        max-height: 500px;
+    }
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 767px) {
+
+    .leaders-section {
+        padding: 55px 0;
+    }
+
+    .leaders-title {
+        font-size: 32px;
+    }
+
+    .leaders-subtitle {
+        font-size: 15px;
+        padding: 0 15px;
+    }
+
+    .leader-card {
+        border-radius: 15px;
+    }
+
+    .leader-image {
+        width: 100%;
+        height: auto;
+        max-height: none;
+    }
+
+    .leader-card h4 {
+        font-size: 22px;
+    }
+
+    .leader-card h6 {
+        font-size: 16px;
+    }
+}
+
+
+/* ==========================================
+   SMALL MOBILE
+========================================== */
+
+@media (max-width: 480px) {
+
+    .leaders-section {
+        padding: 45px 0;
+    }
+
+    .leaders-title {
+        font-size: 28px;
+    }
+
+    .leader-card h4 {
+        font-size: 20px;
+    }
 }

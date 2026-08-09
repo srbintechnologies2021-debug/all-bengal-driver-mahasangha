@@ -10,20 +10,31 @@ import Contact from "../components/home/Contact";
 
 import Footer from "../components/layout/Footer";
 
+
 function Home() {
+
     return (
         <>
             <Navbar />
+
             <Hero />
+
             <About />
+
             <Statistics />
+
             <Leaders />
+
             <NoticeBoard />
+
             <Gallery />
+
             <Contact />
+
             <Footer />
         </>
     );
 }
+
 
 export default Home;

@@ -1,99 +1,96 @@
+import { useEffect, useState } from "react";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
+
 function NoticeBoard() {
 
-    const notices = [
-        {
-            id: 1,
-            title: "🚗 সদস্য নিবন্ধন (Membership Registration) শুরু হয়েছে",
-            description: "অল বেঙ্গল ড্রাইভার মহাসংঘের অনলাইন সদস্য নিবন্ধন এখন চালু হয়েছে। সকল পেশাদার চালকদের আবেদন করার জন্য অনুরোধ করা হচ্ছে।",
-            date: "০৪ আগস্ট ২০২৬",
-            important: true,
-        },
-        {
-            id: 2,
-            title: "🇮🇳 রাজ্য কমিটির সভা - ১৫ আগস্ট ২০২৬",
-            description: "১৫ আগস্ট সকাল ১১টায় রাজ্য কমিটির গুরুত্বপূর্ণ সভা অনুষ্ঠিত হবে। সকল জেলা প্রতিনিধিদের উপস্থিত থাকার জন্য অনুরোধ করা হচ্ছে।",
-            date: "১৫ আগস্ট ২০২৬",
-            important: false,
-        },
-        {
-            id: 3,
-            title: "🏥 ড্রাইভার কল্যাণ ও স্বাস্থ্য শিবির",
-            description: "ড্রাইভারদের জন্য বিনামূল্যে স্বাস্থ্য পরীক্ষা ও চিকিৎসা পরামর্শ শিবির খুব শীঘ্রই আয়োজন করা হবে।",
-            date: "২৫ আগস্ট ২০২৬",
-            important: false,
-        },
-    ];
+    const [notices, setNotices] = useState([]);
+
+    useEffect(() => {
+
+        const q = query(
+            collection(db, "notices"),
+            orderBy("createdAt", "desc")
+        );
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+
+            const data = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+
+            setNotices(data);
+
+        });
+
+        return () => unsubscribe();
+
+    }, []);
 
     return (
-        <section id="notice" className="py-5 bg-light">
+
+        <section className="py-5 bg-light">
 
             <div className="container">
 
-                <div className="text-center mb-5">
-                    <h2 className="fw-bold text-primary">
-                        📢 সর্বশেষ নোটিশ
-                    </h2>
+                <h2 className="text-center fw-bold text-primary mb-5">
+                    📢 Latest Notices
+                </h2>
 
-                    <p className="text-muted">
-                        অল বেঙ্গল ড্রাইভার মহাসংঘের গুরুত্বপূর্ণ ঘোষণা
-                    </p>
-                </div>
+                {notices.length === 0 ? (
 
-                <div className="row">
+                    <div className="alert alert-secondary text-center">
+                        No notices published yet.
+                    </div>
 
-                    {notices.map((notice) => (
+                ) : (
+
+                    notices.map((notice) => (
 
                         <div
-                            className="col-lg-4 col-md-6 mb-4"
                             key={notice.id}
+                            className="card shadow-sm mb-3 border-0"
                         >
 
-                            <div className="card shadow-lg border-0 h-100">
+                            <div className="card-body">
 
-                                <div className="card-body d-flex flex-column">
+                                <h5 className="fw-bold">
 
-                                    {notice.important && (
-                                        <span className="badge bg-danger align-self-start mb-3">
-                                            গুরুত্বপূর্ণ
-                                        </span>
-                                    )}
+                                    {notice.pinned && "📌 "}
 
-                                    <h5 className="fw-bold">
-                                        {notice.title}
-                                    </h5>
+                                    {notice.title}
 
-                                    <p className="text-muted flex-grow-1">
-                                        {notice.description}
-                                    </p>
+                                </h5>
 
-                                    <hr />
+                                <p className="mb-2">
+                                    {notice.description}
+                                </p>
 
-                                    <div className="d-flex justify-content-between align-items-center">
+                                <small className="text-muted">
 
-                                        <small className="text-secondary">
-                                            📅 {notice.date}
-                                        </small>
+                                    {notice.createdAt?.toDate
+                                        ? notice.createdAt
+                                            .toDate()
+                                            .toLocaleString()
+                                        : "Just Now"}
 
-                                        <button className="btn btn-outline-primary btn-sm">
-                                            বিস্তারিত
-                                        </button>
-
-                                    </div>
-
-                                </div>
+                                </small>
 
                             </div>
 
                         </div>
 
-                    ))}
+                    ))
 
-                </div>
+                )}
 
             </div>
 
         </section>
+
     );
+
 }
 
 export default NoticeBoard;
