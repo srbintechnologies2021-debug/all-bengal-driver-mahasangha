@@ -1,12 +1,10 @@
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
-import Home from "./pages/Home";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import "./styles/watermark.css";
 
+import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import MemberDashboard from "./pages/MemberDashboard";
+import Dashboard from "./pages/Dashboard";
 
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -17,135 +15,49 @@ import MembershipPayment from "./pages/MembershipPayment";
 import LogoPurchase from "./pages/LogoPurchase";
 import IDCardPurchase from "./pages/IDCardPurchase";
 
+import {
+  AboutUsPage,
+  ContactUsPage,
+  PrivacyPolicyPage,
+  TermsAndConditionsPage,
+  RefundPolicyPage,
+} from "./pages/legal/CompliancePages";
+import AbdmComplianceFooter from "./components/AbdmComplianceFooter";
 
 function App() {
+  return (
+    <BrowserRouter>
+      <div className="app-watermark"></div>
+      <div className="min-h-screen flex flex-col justify-between">
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
 
-    return (
+            <Route path="/admin-login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/contact-messages" element={<ContactMessages />} />
 
-        <BrowserRouter>
+            <Route path="/membership" element={<Membership />} />
+            <Route path="/membership-payment" element={<MembershipPayment />} />
+            <Route path="/logo-purchase" element={<LogoPurchase />} />
+            <Route path="/id-card-purchase" element={<IDCardPurchase />} />
 
-            {/* ABDM GLOBAL LOGO WATERMARK */}
+            <Route path="/about-us" element={<AboutUsPage />} />
+            <Route path="/contact-us" element={<ContactUsPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+            <Route path="/refund-policy" element={<RefundPolicyPage />} />
 
-            <div className="app-watermark"></div>
-
-
-            <Routes>
-
-                {/* ==========================================
-                    HOME
-                ========================================== */}
-
-                <Route
-                    path="/"
-                    element={<Home />}
-                />
-
-
-                {/* ==========================================
-                    MEMBER REGISTRATION
-                ========================================== */}
-
-                <Route
-                    path="/register"
-                    element={<Register />}
-                />
-
-
-                {/* ==========================================
-                    MEMBER LOGIN
-                ========================================== */}
-
-                <Route
-                    path="/login"
-                    element={<Login />}
-                />
-
-
-                {/* ==========================================
-                    MEMBER DASHBOARD
-                ========================================== */}
-
-                <Route
-                    path="/dashboard"
-                    element={<MemberDashboard />}
-                />
-
-
-                {/* ==========================================
-                    ADMIN LOGIN
-                ========================================== */}
-
-                <Route
-                    path="/admin-login"
-                    element={<AdminLogin />}
-                />
-
-
-                {/* ==========================================
-                    ADMIN DASHBOARD
-                ========================================== */}
-
-                <Route
-                    path="/admin"
-                    element={<AdminDashboard />}
-                />
-
-
-                {/* ==========================================
-                    ADMIN CONTACT MESSAGES
-                ========================================== */}
-
-                <Route
-                    path="/admin/contact-messages"
-                    element={<ContactMessages />}
-                />
-
-
-                {/* ==========================================
-                    MEMBERSHIP
-                ========================================== */}
-
-                <Route
-                    path="/membership"
-                    element={<Membership />}
-                />
-
-
-                {/* ==========================================
-                    MEMBERSHIP PAYMENT
-                ========================================== */}
-
-                <Route
-                    path="/membership-payment"
-                    element={<MembershipPayment />}
-                />
-
-
-                {/* ==========================================
-                    LOGO PURCHASE
-                ========================================== */}
-
-                <Route
-                    path="/logo-purchase"
-                    element={<LogoPurchase />}
-                />
-
-
-                {/* ==========================================
-                    ID CARD PURCHASE
-                ========================================== */}
-
-                <Route
-                    path="/id-card-purchase"
-                    element={<IDCardPurchase />}
-                />
-
-            </Routes>
-
-        </BrowserRouter>
-    );
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+        <AbdmComplianceFooter />
+      </div>
+    </BrowserRouter>
+  );
 }
 
-
 export default App;
-

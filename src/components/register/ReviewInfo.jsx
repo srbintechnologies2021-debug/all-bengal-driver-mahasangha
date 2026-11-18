@@ -130,7 +130,7 @@ function ReviewInfo({ formData, setStep }) {
 
                 {/* Driver */}
 
-                <h5 className="text-primary mt-4">🚗 Driver Information</h5>
+                <h5 className="text-primary mt-4">Driver Information</h5>
 
                 <table className="table table-bordered">
 

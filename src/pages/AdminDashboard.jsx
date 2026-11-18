@@ -1,16 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { signOut } from "firebase/auth";
-
-import {
-    collection,
-    onSnapshot,
-    doc,
-    updateDoc,
-} from "firebase/firestore";
-
-import { auth, db } from "../firebase/firebaseConfig";
+import { supabase } from "../supabase/supabaseClient";
 
 import DashboardCards from "../components/DashboardCards";
 import SearchBar from "../components/SearchBar";
@@ -22,7 +12,6 @@ import GalleryForm from "../components/admin/GalleryForm";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
-
     const navigate = useNavigate();
 
     const [members, setMembers] = useState([]);
@@ -30,666 +19,241 @@ function AdminDashboard() {
     const [searchTerm, setSearchTerm] = useState("");
     const [error, setError] = useState("");
     const [selectedMember, setSelectedMember] = useState(null);
-
     const [processingMember, setProcessingMember] = useState(null);
 
+    const normalizeMember = (row) => ({
+        ...row,
+        name: row.full_name || row.name || "",
+        memberId: row.member_id || "",
+        membershipStatus: row.membership_status || "Pending",
+        membershipType: row.membership_type || "Driver",
+        paymentStatus: row.payment_status || "Pending",
+    });
 
-    /* ================================
-       Load Members
-    ================================= */
-
-    useEffect(() => {
-
-        const unsubscribe = onSnapshot(
-
-            collection(db, "members"),
-
-            (snapshot) => {
-
-                const data = snapshot.docs.map((item) => ({
-                    id: item.id,
-                    ...item.data(),
-                }));
-
-                setMembers(data);
-                setLoading(false);
-
-            },
-
-            (err) => {
-
-                console.error(
-                    "Firestore Error:",
-                    err
-                );
-
-                setError(err.message);
-                setLoading(false);
-
+    const fetchMembers = async () => {
+        try {
+            const { data: { user }, error: authErr } = await supabase.auth.getUser();
+            if (authErr || !user) {
+                navigate("/admin-login");
+                return;
             }
 
-        );
+            const { data: adminProfile } = await supabase
+                .from("profiles")
+                .select("role")
+                .eq("id", user.id)
+                .single();
 
-        return () => unsubscribe();
+            if (!adminProfile || (adminProfile.role !== "admin" && adminProfile.role !== "superadmin")) {
+                await supabase.auth.signOut();
+                navigate("/admin-login");
+                return;
+            }
 
-    }, []);
+            const { data, error: fetchErr } = await supabase
+                .from("profiles")
+                .select("*")
+                .neq("role", "admin")
+                .neq("role", "superadmin")
+                .order("created_at", { ascending: false });
 
-
-    /* ================================
-       Statistics
-    ================================= */
-
-    const statistics = useMemo(() => {
-
-        return {
-
-            total: members.length,
-
-            approved: members.filter(
-                (member) =>
-                    member.membershipStatus === "Approved"
-            ).length,
-
-            pending: members.filter(
-                (member) =>
-                    member.membershipStatus === "Pending"
-            ).length,
-
-            rejected: members.filter(
-                (member) =>
-                    member.membershipStatus === "Rejected"
-            ).length,
-
-        };
-
-    }, [members]);
-
-
-    /* ================================
-       Search
-    ================================= */
-
-    const filteredMembers = useMemo(() => {
-
-        const keyword =
-            searchTerm.toLowerCase().trim();
-
-        return members.filter((member) => {
-
-            return (
-
-                member.name
-                    ?.toLowerCase()
-                    .includes(keyword) ||
-
-                member.phone
-                    ?.toLowerCase()
-                    .includes(keyword) ||
-
-                member.email
-                    ?.toLowerCase()
-                    .includes(keyword) ||
-
-                member.district
-                    ?.toLowerCase()
-                    .includes(keyword) ||
-
-                member.block
-                    ?.toLowerCase()
-                    .includes(keyword) ||
-
-                member.memberId
-                    ?.toLowerCase()
-                    .includes(keyword)
-
-            );
-
-        });
-
-    }, [members, searchTerm]);
-
-
-    /* ================================
-       Logout
-    ================================= */
-
-    const logout = async () => {
-
-        try {
-
-            await signOut(auth);
-
-            navigate("/admin-login");
-
-        } catch (error) {
-
-            console.error(error);
-
-            alert("Logout Failed");
-
+            if (fetchErr) throw fetchErr;
+            setMembers((data || []).map(normalizeMember));
+        } catch (err) {
+            console.error("Admin Load Error:", err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-
     };
 
+    useEffect(() => {
+        fetchMembers();
+    }, [navigate]);
 
-    /* ================================
-       Generate Member ID
-    ================================= */
+    const statistics = useMemo(() => ({
+        total: members.length,
+        approved: members.filter((m) => m.membershipStatus === "Approved").length,
+        pending: members.filter((m) => m.membershipStatus === "Pending").length,
+        rejected: members.filter((m) => m.membershipStatus === "Rejected").length,
+    }), [members]);
+
+    const filteredMembers = useMemo(() => {
+        const keyword = searchTerm.toLowerCase().trim();
+        return members.filter((member) =>
+            member.name?.toLowerCase().includes(keyword) ||
+            member.phone?.toLowerCase().includes(keyword) ||
+            member.email?.toLowerCase().includes(keyword) ||
+            member.district?.toLowerCase().includes(keyword) ||
+            member.block?.toLowerCase().includes(keyword) ||
+            member.memberId?.toLowerCase().includes(keyword)
+        );
+    }, [members, searchTerm]);
+
+    const logout = async () => {
+        await supabase.auth.signOut();
+        navigate("/admin-login");
+    };
 
     const generateMemberId = () => {
-
-        const currentYear =
-            new Date().getFullYear();
-
+        const currentYear = new Date().getFullYear();
         let highestNumber = 0;
 
         members.forEach((member) => {
+            const existingId = member.memberId;
+            if (!existingId) return;
 
-            const existingId =
-                member.memberId;
-
-            if (!existingId) {
-                return;
-            }
-
-            const match =
-                existingId.match(
-                    /^ABDM-\d{4}-(\d+)$/
-                );
-
+            const match = existingId.match(/^ABDM-\d{4}-(\d+)$/);
             if (match) {
-
-                const number =
-                    parseInt(
-                        match[1],
-                        10
-                    );
-
-                if (
-                    !isNaN(number) &&
-                    number > highestNumber
-                ) {
-
+                const number = parseInt(match[1], 10);
+                if (!isNaN(number) && number > highestNumber) {
                     highestNumber = number;
-
                 }
-
             }
-
         });
 
-        const nextNumber =
-            highestNumber + 1;
-
-        return (
-            `ABDM-${currentYear}-${String(
-                nextNumber
-            ).padStart(4, "0")}`
-        );
-
+        const nextNumber = highestNumber + 1;
+        return `ABDM-${currentYear}-${String(nextNumber).padStart(4, "0")}`;
     };
 
-
-    /* ================================
-       Update Member Status
-    ================================= */
-
-    const updateMemberStatus = async (
-        memberId,
-        status
-    ) => {
-
+    const updateMemberStatus = async (memberId, status) => {
         try {
-
             setProcessingMember(memberId);
-
-
-            const member = members.find(
-                (item) =>
-                    item.id === memberId
-            );
-
-
-            if (!member) {
-
-                alert(
-                    "Member not found."
-                );
-
-                return;
-
-            }
-
-
-            /* ============================
-               APPROVE
-            ============================ */
+            const member = members.find((item) => item.id === memberId);
+            if (!member) return;
 
             if (status === "Approved") {
+                const memberIdToSave = member.memberId || generateMemberId();
 
-                /*
-                 * If member already has
-                 * Member ID, keep it.
-                 */
+                const { error: updateErr } = await supabase
+                    .from("profiles")
+                    .update({
+                        membership_status: "Approved",
+                        member_id: memberIdToSave,
+                    })
+                    .eq("id", memberId);
 
-                let memberIdToSave =
-                    member.memberId;
+                if (updateErr) throw updateErr;
 
-
-                /*
-                 * Generate new ID only
-                 * if one doesn't exist.
-                 */
-
-                if (!memberIdToSave) {
-
-                    memberIdToSave =
-                        generateMemberId();
-
-                }
-
-
-                await updateDoc(
-
-                    doc(
-                        db,
-                        "members",
-                        memberId
-                    ),
-
-                    {
-                        membershipStatus:
-                            "Approved",
-
-                        memberId:
-                            memberIdToSave,
-                    }
-
+                setMembers((prev) =>
+                    prev.map((m) =>
+                        m.id === memberId
+                            ? { ...m, membershipStatus: "Approved", membership_status: "Approved", memberId: memberIdToSave, member_id: memberIdToSave }
+                            : m
+                    )
                 );
+                alert(`Member Approved!\n\nMember ID: ${memberIdToSave}`);
+            } else {
+                const { error: updateErr } = await supabase
+                    .from("profiles")
+                    .update({ membership_status: status })
+                    .eq("id", memberId);
 
+                if (updateErr) throw updateErr;
 
-                alert(
-                    `Member Approved!\n\nMember ID: ${memberIdToSave}`
+                setMembers((prev) =>
+                    prev.map((m) =>
+                        m.id === memberId
+                            ? { ...m, membershipStatus: status, membership_status: status }
+                            : m
+                    )
                 );
-
             }
-
-
-            /* ============================
-               REJECT
-            ============================ */
-
-            else if (status === "Rejected") {
-
-                await updateDoc(
-
-                    doc(
-                        db,
-                        "members",
-                        memberId
-                    ),
-
-                    {
-                        membershipStatus:
-                            "Rejected",
-                    }
-
-                );
-
-            }
-
-
-            /* ============================
-               Other Status
-            ============================ */
-
-            else {
-
-                await updateDoc(
-
-                    doc(
-                        db,
-                        "members",
-                        memberId
-                    ),
-
-                    {
-                        membershipStatus:
-                            status,
-                    }
-
-                );
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Update Member Status Error:",
-                error
-            );
-
-            alert(
-                "Failed to update member status: " +
-                error.message
-            );
-
+        } catch (err) {
+            console.error("Update Member Status Error:", err);
+            alert("Failed to update member status: " + err.message);
         } finally {
-
             setProcessingMember(null);
-
         }
-
     };
 
-
-    /* ================================
-       Update Member Information
-    ================================= */
-
-    const updateMember = async (
-        memberId,
-        updatedData
-    ) => {
-
+    const updateMember = async (memberId, updatedData) => {
         try {
+            const payload = {
+                full_name: updatedData.name ?? updatedData.full_name,
+                phone: updatedData.phone,
+                district: updatedData.district,
+                block: updatedData.block,
+                vehicle_no: updatedData.vehicle_no ?? updatedData.vehicleNo,
+                license_number: updatedData.license_number ?? updatedData.licenceNo,
+            };
 
-            await updateDoc(
+            const { error: updateErr } = await supabase
+                .from("profiles")
+                .update(payload)
+                .eq("id", memberId);
 
-                doc(
-                    db,
-                    "members",
-                    memberId
-                ),
+            if (updateErr) throw updateErr;
 
-                updatedData
-
-            );
-
-
-            alert(
-                "Member information updated successfully."
-            );
-
-
+            await fetchMembers();
+            alert("Member information updated successfully.");
             setSelectedMember(null);
-
-        } catch (error) {
-
-            console.error(
-                "Update Member Error:",
-                error
-            );
-
-            alert(
-                "Failed to update member: " +
-                error.message
-            );
-
+        } catch (err) {
+            console.error("Update Member Error:", err);
+            alert("Failed to update member: " + err.message);
         }
-
     };
 
-
-    /* ================================
-       Loading
-    ================================= */
-
-    if (loading) {
-
-        return (
-
-            <div className="admin-loading">
-
-                Loading Members...
-
-            </div>
-
-        );
-
-    }
-
-
-    /* ================================
-       Error
-    ================================= */
-
-    if (error) {
-
-        return (
-
-            <div className="admin-error">
-
-                {error}
-
-            </div>
-
-        );
-
-    }
-
-
-    /* ================================
-       Dashboard
-    ================================= */
+    if (loading) return <div className="admin-loading">Loading Members...</div>;
+    if (error) return <div className="admin-error">{error}</div>;
 
     return (
-
         <div className="admin-dashboard">
-
-
-            {/* =========================
-                Header
-            ========================== */}
-
             <div className="admin-header">
-
                 <div>
-
-                    <h1>
-                        🚗 ABDM Admin Dashboard
-                    </h1>
-
-                    <p>
-                        All Bengal Driver Mahasangha
-                    </p>
-
+                    <h1>🚗 ABDM Admin Dashboard</h1>
+                    <p>All Bengal Driver Mahasangha</p>
                 </div>
-
-
-                <button
-                    className="logout-btn"
-                    onClick={logout}
-                >
-                    Logout
-                </button>
-
+                <button className="logout-btn" onClick={logout}>Logout</button>
             </div>
-
-
-            {/* =========================
-                Statistics
-            ========================== */}
 
             <DashboardCards
-
-                total={
-                    statistics.total
-                }
-
-                approved={
-                    statistics.approved
-                }
-
-                pending={
-                    statistics.pending
-                }
-
-                rejected={
-                    statistics.rejected
-                }
-
+                total={statistics.total}
+                approved={statistics.approved}
+                pending={statistics.pending}
+                rejected={statistics.rejected}
             />
-
-
-            {/* =========================
-                Search
-            ========================== */}
 
             <SearchBar
-
-                value={
-                    searchTerm
-                }
-
-                onChange={(e) =>
-                    setSearchTerm(
-                        e.target.value
-                    )
-                }
-
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
             />
-
-
-            {/* =========================
-                Members
-            ========================== */}
 
             <div className="member-list">
-
                 {filteredMembers.length === 0 ? (
-
-                    <div className="empty-box">
-
-                        No Members Found
-
-                    </div>
-
+                    <div className="empty-box">No Members Found</div>
                 ) : (
-
-                    filteredMembers.map(
-                        (member) => (
-
-                            <div
-                                key={member.id}
-                                style={{
-                                    opacity:
-                                        processingMember ===
-                                            member.id
-                                            ? 0.6
-                                            : 1,
-                                    pointerEvents:
-                                        processingMember ===
-                                            member.id
-                                            ? "none"
-                                            : "auto",
-                                }}
-                            >
-
-                                <MemberCard
-
-                                    member={
-                                        member
-                                    }
-
-
-                                    onApprove={() =>
-                                        updateMemberStatus(
-                                            member.id,
-                                            "Approved"
-                                        )
-                                    }
-
-
-                                    onReject={() =>
-                                        updateMemberStatus(
-                                            member.id,
-                                            "Rejected"
-                                        )
-                                    }
-
-
-                                    onView={() =>
-                                        setSelectedMember(
-                                            member
-                                        )
-                                    }
-
-                                />
-
-                            </div>
-
-                        )
-                    )
-
+                    filteredMembers.map((member) => (
+                        <div
+                            key={member.id}
+                            style={{
+                                opacity: processingMember === member.id ? 0.6 : 1,
+                                pointerEvents: processingMember === member.id ? "none" : "auto",
+                            }}
+                        >
+                            <MemberCard
+                                member={member}
+                                onApprove={() => updateMemberStatus(member.id, "Approved")}
+                                onReject={() => updateMemberStatus(member.id, "Rejected")}
+                                onView={() => setSelectedMember(member)}
+                            />
+                        </div>
+                    ))
                 )}
-
             </div>
 
-
-            {/* =========================
-                Member Modal
-            ========================== */}
-
             <MemberModal
-
-                member={
-                    selectedMember
-                }
-
-
-                onClose={() =>
-                    setSelectedMember(
-                        null
-                    )
-                }
-
-
-                onApprove={(memberId) =>
-                    updateMemberStatus(
-                        memberId,
-                        "Approved"
-                    )
-                }
-
-
-                onReject={(memberId) =>
-                    updateMemberStatus(
-                        memberId,
-                        "Rejected"
-                    )
-                }
-
-
-                onUpdate={
-                    updateMember
-                }
-
+                member={selectedMember}
+                onClose={() => setSelectedMember(null)}
+                onApprove={(memberId) => updateMemberStatus(memberId, "Approved")}
+                onReject={(memberId) => updateMemberStatus(memberId, "Rejected")}
+                onSave={updateMember}
             />
 
-
-            {/* =========================
-                Notices
-            ========================== */}
-
-            <hr className="my-5" />
-
             <NoticeList />
-
-
-            {/* =========================
-                Gallery
-            ========================== */}
-
-            <hr className="my-5" />
-
             <GalleryForm />
-
-
         </div>
-
     );
-
 }
 
 export default AdminDashboard;
