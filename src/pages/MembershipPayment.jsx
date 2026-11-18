@@ -34,7 +34,7 @@ function MembershipPayment() {
     try {
       setLoading(true);
       const txnid = `MEM_${Date.now()}`;
-      const apiBase = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+      const apiBase = import.meta.env.VITE_API_BASE_URL || "";
       const res = await fetch(`${apiBase}/api/payments/initiate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
