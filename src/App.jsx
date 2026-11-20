@@ -5,13 +5,9 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
-import ContactMessages from "./pages/admin/ContactMessages";
+import MemberDashboard from "./pages/MemberDashboard";
 
 import Membership from "./pages/Membership";
-import MembershipPayment from "./pages/MembershipPayment";
 import LogoPurchase from "./pages/LogoPurchase";
 import IDCardPurchase from "./pages/IDCardPurchase";
 
@@ -35,13 +31,9 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
-
-            <Route path="/admin-login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/contact-messages" element={<ContactMessages />} />
+            <Route path="/member-dashboard" element={<MemberDashboard />} />
 
             <Route path="/membership" element={<Membership />} />
-            <Route path="/membership-payment" element={<MembershipPayment />} />
             <Route path="/logo-purchase" element={<LogoPurchase />} />
             <Route path="/id-card-purchase" element={<IDCardPurchase />} />
 
